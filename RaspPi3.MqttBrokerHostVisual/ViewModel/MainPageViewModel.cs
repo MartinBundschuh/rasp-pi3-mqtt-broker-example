@@ -44,60 +44,60 @@ namespace RaspPi3.MqttBrokerHostVisual.ViewModel
             }
         }
 
-        //private readonly StartMqttBroker startMqttBroker;
-        //public StartMqttBroker StartMqtt { get { return StartMqtt; } }
+    //    private readonly StartMqttBroker startMqttBroker;
+    //    public StartMqttBroker StartMqtt { get { return StartMqtt; } }
 
-        //public class StartMqttBroker : ICommand
-        //{
-        //    public event EventHandler CanExecuteChanged;
-        //    private readonly MainPageViewModel mainPageViewModel;
-        //    public StartMqttBroker(MainPageViewModel mainPageViewModel)
-        //    {
-        //        this.mainPageViewModel = mainPageViewModel;
-        //        mainPageViewModel.PropertyChanged += (s, e) =>
-        //        {
-        //            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        //        };
-        //    }
+    //    public class StartMqttBroker : ICommand
+    //    {
+    //        public event EventHandler CanExecuteChanged;
+    //        private readonly MainPageViewModel mainPageViewModel;
+    //        public StartMqttBroker(MainPageViewModel mainPageViewModel)
+    //        {
+    //            this.mainPageViewModel = mainPageViewModel;
+    //            mainPageViewModel.PropertyChanged += (s, e) =>
+    //            {
+    //                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    //            };
+    //        }
 
-        //    public bool CanExecute(object parameter)
-        //    {
-        //        return mainPageViewModel.mqttBroker != null && !mainPageViewModel.IsConnected;
-        //    }
+    //        public bool CanExecute(object parameter)
+    //    {
+    //        return mainPageViewModel.mqttBroker != null && !mainPageViewModel.IsConnected;
+    //    }
 
-        //    public void Execute(object parameter)
-        //    {
-        //        mainPageViewModel.mqttBroker.Start();
-        //        mainPageViewModel.IsConnected = true;
-        //    }
-        //}
+    //    public void Execute(object parameter)
+    //    {
+    //        mainPageViewModel.mqttBroker.Start();
+    //        mainPageViewModel.IsConnected = true;
+    //    }
+    //}
 
-        //private readonly StopMqttBroker stopMqttBroker;
-        //public StopMqttBroker stopMqtt { get { return stopMqttBroker; } }
+    //private readonly StopMqttBroker stopMqttBroker;
+    //public StopMqttBroker stopMqtt { get { return stopMqttBroker; } }
 
-        //public class StopMqttBroker : ICommand
-        //{
-        //    public event EventHandler CanExecuteChanged;
-        //    private readonly MainPageViewModel mainPageViewModel;
-        //    public StopMqttBroker(MainPageViewModel mainPageViewModel)
-        //    {
-        //        this.mainPageViewModel = mainPageViewModel;
-        //        mainPageViewModel.PropertyChanged += (s, e) =>
-        //        {
-        //            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        //        };
-        //    }
+    //public class StopMqttBroker : ICommand
+    //{
+    //    public event EventHandler CanExecuteChanged;
+    //    private readonly MainPageViewModel mainPageViewModel;
+    //    public StopMqttBroker(MainPageViewModel mainPageViewModel)
+    //    {
+    //        this.mainPageViewModel = mainPageViewModel;
+    //        mainPageViewModel.PropertyChanged += (s, e) =>
+    //        {
+    //            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    //        };
+    //    }
 
-        //    public bool CanExecute(object parameter)
-        //    {
-        //        return mainPageViewModel.mqttBroker != null && mainPageViewModel.isConnected;
-        //    }
+    //    public bool CanExecute(object parameter)
+    //    {
+    //        return mainPageViewModel.mqttBroker != null && mainPageViewModel.isConnected;
+    //    }
 
-        //    public void Execute(object parameter)
-        //    {
-        //        mainPageViewModel.mqttBroker.Stop();
-        //        mainPageViewModel.IsConnected = false;
-        //    }
-        //}
-    }
+    //    public void Execute(object parameter)
+    //    {
+    //        mainPageViewModel.mqttBroker.Stop();
+    //        mainPageViewModel.IsConnected = false;
+    //    }
+    //}
+}
 }
