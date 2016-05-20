@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaspPi3.MqttBroker", "RaspPi3.MqttBroker\RaspPi3.MqttBroker.csproj", "{68AB2887-65DC-44DF-B19A-B348BCF83345}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaspPi3.MqttBrokerHost", "RaspPi3.MqttBroker\RaspPi3.MqttBrokerHost.csproj", "{68AB2887-65DC-44DF-B19A-B348BCF83345}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaspPi3.MqttBrokerHostVisual", "RaspPi3.MqttBrokerHostVisual\RaspPi3.MqttBrokerHostVisual.csproj", "{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,24 @@ Global
 		{68AB2887-65DC-44DF-B19A-B348BCF83345}.Release|x86.ActiveCfg = Release|x86
 		{68AB2887-65DC-44DF-B19A-B348BCF83345}.Release|x86.Build.0 = Release|x86
 		{68AB2887-65DC-44DF-B19A-B348BCF83345}.Release|x86.Deploy.0 = Release|x86
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|ARM.Build.0 = Debug|ARM
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|ARM.Deploy.0 = Debug|ARM
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|x64.ActiveCfg = Debug|x64
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|x64.Build.0 = Debug|x64
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|x64.Deploy.0 = Debug|x64
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|x86.ActiveCfg = Debug|x86
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|x86.Build.0 = Debug|x86
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Debug|x86.Deploy.0 = Debug|x86
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|ARM.ActiveCfg = Release|ARM
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|ARM.Build.0 = Release|ARM
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|ARM.Deploy.0 = Release|ARM
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|x64.ActiveCfg = Release|x64
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|x64.Build.0 = Release|x64
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|x64.Deploy.0 = Release|x64
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|x86.ActiveCfg = Release|x86
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|x86.Build.0 = Release|x86
+		{4F1C19CD-B170-4B3A-9B51-6A1C8CAFC3A5}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,9 @@
+﻿<okra:OkraApplication
+    x:Class="RaspPi3.MqttBrokerHostVisual.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:okra="using:Okra"
+    xmlns:local="using:RaspPi3.MqttBrokerHostVisual"
+    RequestedTheme="Light">
+
+</okra:OkraApplication>

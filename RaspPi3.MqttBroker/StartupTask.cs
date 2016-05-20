@@ -1,25 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net.Http;
+﻿using uPLibrary.Networking.M2Mqtt;
 using Windows.ApplicationModel.Background;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
-namespace RaspPi3.MqttBroker
+namespace RaspPi3.MqttBrokerHost
 {
     public sealed class StartupTask : IBackgroundTask
     {
+        private BackgroundTaskDeferral backgroundTraskDeferral;
+
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-            // 
-            // TODO: Insert code to perform background work
-            //
-            // If you start any asynchronous methods here, prevent the task
-            // from closing prematurely by using BackgroundTaskDeferral as
-            // described in http://aka.ms/backgroundtaskdeferral
-            //
+            backgroundTraskDeferral = taskInstance.GetDeferral();
+
+            var mqttBroker = new MqttBroker();
+
+            // Maybe use User Authentification
+            //mqttBroker.UserAuth("Username", "Password");
+
+            mqttBroker.Start();
+
+            // Do not stop the backgroundtask unless it's cancled
+            //backgroundTraskDeferral.Complete();
+
+            taskInstance.Canceled += (s, e) =>
+            {
+                backgroundTraskDeferral.Complete();
+            };
         }
     }
 }
