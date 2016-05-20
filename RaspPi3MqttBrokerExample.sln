@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaspPi3.MqttBrokerHostVisua
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaspPi3.MqttBrokerHost", "RaspPi3.MqttBrokerHost\RaspPi3.MqttBrokerHost.csproj", "{68AB2887-65DC-44DF-B19A-B348BCF83345}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaspPi3.MqttBrokerPiConsumer", "RaspPi3.MqttBrokerPiConsumer\RaspPi3.MqttBrokerPiConsumer.csproj", "{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaspPi3.MqttBrokerPhoneConsumer", "RaspPi3.MqttBrokerPhoneConsumer\RaspPi3.MqttBrokerPhoneConsumer.csproj", "{D559E070-9839-4F56-B66E-AE6B20928B2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -53,6 +57,42 @@ Global
 		{68AB2887-65DC-44DF-B19A-B348BCF83345}.Release|x86.ActiveCfg = Release|x86
 		{68AB2887-65DC-44DF-B19A-B348BCF83345}.Release|x86.Build.0 = Release|x86
 		{68AB2887-65DC-44DF-B19A-B348BCF83345}.Release|x86.Deploy.0 = Release|x86
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|ARM.ActiveCfg = Debug|ARM
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|ARM.Build.0 = Debug|ARM
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|ARM.Deploy.0 = Debug|ARM
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|x64.ActiveCfg = Debug|x64
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|x64.Build.0 = Debug|x64
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|x64.Deploy.0 = Debug|x64
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|x86.ActiveCfg = Debug|x86
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|x86.Build.0 = Debug|x86
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Debug|x86.Deploy.0 = Debug|x86
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|ARM.ActiveCfg = Release|ARM
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|ARM.Build.0 = Release|ARM
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|ARM.Deploy.0 = Release|ARM
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|x64.ActiveCfg = Release|x64
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|x64.Build.0 = Release|x64
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|x64.Deploy.0 = Release|x64
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|x86.ActiveCfg = Release|x86
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|x86.Build.0 = Release|x86
+		{1F2468B8-9183-4ACD-85C0-8D9E1214B1BD}.Release|x86.Deploy.0 = Release|x86
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|ARM.ActiveCfg = Debug|ARM
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|ARM.Build.0 = Debug|ARM
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|ARM.Deploy.0 = Debug|ARM
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|x64.ActiveCfg = Debug|x64
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|x64.Build.0 = Debug|x64
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|x64.Deploy.0 = Debug|x64
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|x86.ActiveCfg = Debug|x86
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|x86.Build.0 = Debug|x86
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Debug|x86.Deploy.0 = Debug|x86
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|ARM.ActiveCfg = Release|ARM
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|ARM.Build.0 = Release|ARM
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|ARM.Deploy.0 = Release|ARM
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|x64.ActiveCfg = Release|x64
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|x64.Build.0 = Release|x64
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|x64.Deploy.0 = Release|x64
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|x86.ActiveCfg = Release|x86
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|x86.Build.0 = Release|x86
+		{D559E070-9839-4F56-B66E-AE6B20928B2F}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
