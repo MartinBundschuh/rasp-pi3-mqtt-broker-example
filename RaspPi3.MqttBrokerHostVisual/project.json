@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "GnatMQ": "1.1.0",
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
     "Okra.MEF": "1.2.0"
   },
   "frameworks": {
