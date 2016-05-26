@@ -8,9 +8,9 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="listViewBroker" HorizontalAlignment="Left" Height="620" Margin="10,10,0,0" VerticalAlignment="Top" Width="340" Header="MQTT Broker Control">
+        <ListView x:Name="listViewBrokerHost" HorizontalAlignment="Left" Height="620" Margin="10,10,0,0" VerticalAlignment="Top" Width="340" Header="MQTT Broker Control">
             <ListViewItem>
-                <ToggleSwitch x:Name="toggleSwitchBrokerStatus" Header="Host Status" IsOn="{Binding Path=IsConnected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <ToggleSwitch x:Name="toggleSwitchBrokerHost" Header="Is Hosting" IsOn="{Binding Path=IsHosting, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </ListViewItem>
         </ListView>
     </Grid>
