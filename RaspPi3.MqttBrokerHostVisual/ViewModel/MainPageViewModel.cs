@@ -9,6 +9,8 @@ namespace RaspPi3.MqttBrokerHostVisual.ViewModel
     internal class MainPageViewModel : INotifyPropertyChanged
     {
         private readonly MqttBroker mqttBroker; // MyOwnMqttBroker mqttBroker
+        public event PropertyChangedEventHandler PropertyChanged;
+        private bool isHosting;
 
         public MainPageViewModel()
         {
@@ -16,13 +18,11 @@ namespace RaspPi3.MqttBrokerHostVisual.ViewModel
             IsHosting = true;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private bool isHosting;
         public bool IsHosting
         {
             get { return isHosting; }

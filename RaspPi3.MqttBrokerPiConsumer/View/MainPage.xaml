@@ -8,6 +8,18 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <ListView x:Name="listViewBrokerConnection" HorizontalAlignment="Left" Height="620" Margin="10,10,0,0" VerticalAlignment="Top" Width="340" Header="MQTT Broker Connection Status">
+            <ListViewItem>
+                <ToggleSwitch x:Name="toggleSwitchBrokerCOnnection" Header="Is Connected" IsOn="{Binding Path=IsConnected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ListViewItem>
+            <ListViewItem>
+                <TextBox x:Name="textBlockBrokerName" Header="Broker Name" Text="{Binding Path=BrokerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsReadOnly="{Binding Path=IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ListViewItem>
+            <ListViewItem>
+                <TextBox x:Name="textBlockBrokerPort" Header="Broker Port" Text="{Binding Path=BrokerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsReadOnly="{Binding Path=IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </ListViewItem>
+        </ListView>
     </Grid>
 </Page>
