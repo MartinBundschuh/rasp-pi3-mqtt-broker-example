@@ -1,12 +1,12 @@
-﻿using System;
-using uPLibrary.Networking.M2Mqtt;
+﻿using uPLibrary.Networking.M2Mqtt;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     class MqttConnector
     {
         internal string BrokerName = "m21.cloudmqtt.com";
-        internal string BrokerPort = "21599"; //11599
+        private enum CloudMqttBroker { Default = 11599, Ssl = 21599, Tsl = 31599 }
+        internal string BrokerPort = CloudMqttBroker.Ssl.ToString("d");
 
         private MqttClient mqttClient;
         private const bool SECURE = true;
@@ -17,31 +17,18 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             int port;
             int.TryParse(BrokerPort, out port);
 
-            try
-            {
-                mqttClient = new MqttClient(BrokerName, port, SECURE, MQTTSLPROTOCOLS);
-                mqttClient.Connect(MqttUser.ClientId, MqttUser.UserName, MqttUser.Password);
-            }
-            catch (Exception e)
-            {
-                var debugMessage = e.Message;
-                return;
-            }
+            mqttClient = new MqttClient(BrokerName, port, SECURE, MQTTSLPROTOCOLS);
+            mqttClient.Connect(MqttUser.ClientId, MqttUser.UserName, MqttUser.Password);
         }
 
         internal void DisConnect()
         {
-            try
-            {
-                mqttClient.Disconnect();
-            }
-            catch (Exception e)
-            {
-                var debugMessage = e.Message;
-                return;
-            }
+            // Oterhwise ReadOnly is not set properly.
+            mqttClient.Disconnect();
+
+            while (mqttClient != null && mqttClient.IsConnected) { }
         }
 
-        public bool IsConnected { get { return mqttClient.IsConnected; } }
+        public bool IsConnected { get { return mqttClient != null && mqttClient.IsConnected; } }
     }
 }

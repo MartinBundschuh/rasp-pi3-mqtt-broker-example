@@ -8,18 +8,27 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="listViewBrokerConnection" HorizontalAlignment="Left" Height="620" Margin="10,10,0,0" VerticalAlignment="Top" Width="340" Header="MQTT Broker Connection Status">
-            <ListViewItem>
-                <ToggleSwitch x:Name="toggleSwitchBrokerCOnnection" Header="Is Connected" IsOn="{Binding Path=IsConnected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </ListViewItem>
-            <ListViewItem>
-                <TextBox x:Name="textBlockBrokerName" Header="Broker Name" Text="{Binding Path=BrokerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         IsReadOnly="{Binding Path=IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </ListViewItem>
-            <ListViewItem>
-                <TextBox x:Name="textBlockBrokerPort" Header="Broker Port" Text="{Binding Path=BrokerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         IsReadOnly="{Binding Path=IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            </ListViewItem>
-        </ListView>
+        <StackPanel Margin="5,5,5,5">
+            <TextBlock x:Name="textBoxHeader" Margin="5" FontWeight="Bold" FontSize="20" Text="MQTT Broker Settings"/>
+            
+            <ToggleSwitch x:Name="toggleSwitchBrokerCOnnection" Margin="3" Header="Is Connected" 
+                          IsOn="{Binding Path=IsConnected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            
+            <TextBox x:Name="textBlockBrokerName" Margin="3" Header="Broker Name" 
+                     Text="{Binding Path=BrokerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     IsReadOnly="{Binding Path=IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            
+            <TextBox x:Name="textBlockBrokerPort" Margin="3" Header="Broker Port" 
+                     Text="{Binding Path=BrokerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     IsReadOnly="{Binding Path=IsReadOnly, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            
+            <TextBlock x:Name="textBoxError" Margin="3" Foreground="Red" Text="ERROR"                       
+                       Visibility="{Binding Path=IsVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock x:Name="textBoxErrorMessage" Margin="3" Foreground="Red" TextWrapping="Wrap"
+                       Text="{Binding Path=ErrorMessage, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"                       
+                       Visibility="{Binding Path=IsVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock x:Name="textBoxMessage" Margin="5" FontWeight="Bold" FontSize="20" Text="Message Overview"/>
+        </StackPanel>
     </Grid>
 </Page>
