@@ -6,7 +6,7 @@ using Windows.System;
 
 namespace RaspPi3.MqttBrokerHostVisual.Model
 {
-    class MyOwnMqttBroker
+    class MyOwnMqttBroker : IDisposable
     {
         private readonly ProcessLauncherOptions processLauncherOptions;
         private readonly InMemoryRandomAccessStream standardOutput;
@@ -72,6 +72,16 @@ namespace RaspPi3.MqttBrokerHostVisual.Model
                 }
                 return output.ToString();
             }
+        }
+
+        public void Dispose()
+        {
+            if (standardOutput != null)
+                standardOutput.Dispose();
+            if (standardError != null)
+                standardError.Dispose();
+
+            GC.SuppressFinalize(this);
         }
     }
 }

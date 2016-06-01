@@ -1,15 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using SQLite.Net.Attributes;
+using System.Collections.Generic;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
-    // TODO: Store and load data in azure
+    [Type(typeof(MqttUser))]
+    [Table("MqttUsers")]
     public class MqttUser
     {
+        [PrimaryKey]
         public string UserName { get; set; }
         public string ClientId { get; set; }
         public string Password { get; set; }
+        [Indexed]
+        public string MqttConnectionBrokerName { get; set; }
+        [Ignore]
         public virtual MqttConnection Connection { get; set; }
+        [Ignore]
         public virtual List<MqttTopic> TopicsToSubscribe { get; set; }
 
         internal List<MqttTopic> GetTopicsToSubscribe()

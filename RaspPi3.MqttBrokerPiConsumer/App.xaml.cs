@@ -1,5 +1,8 @@
 ﻿using Okra;
+using RaspPi3.MqttBrokerPiConsumer.Model;
+using System;
 
+[assembly: CLSCompliant(false)]
 namespace RaspPi3.MqttBrokerPiConsumer
 {
     /// <summary>
@@ -14,7 +17,10 @@ namespace RaspPi3.MqttBrokerPiConsumer
         public App()
             : base(new AppBootstrapper())
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            using (var sqLiteHandler = new SqLiteHandler())
+                sqLiteHandler.CreateTables(TypeAttribute.GetTypeAttributes());
         }
     }
 }

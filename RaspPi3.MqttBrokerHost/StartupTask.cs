@@ -1,8 +1,10 @@
-﻿using uPLibrary.Networking.M2Mqtt;
+﻿using System;
+using uPLibrary.Networking.M2Mqtt;
 using Windows.ApplicationModel.Background;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
+[assembly: CLSCompliant(false)]
 namespace RaspPi3.MqttBrokerHost
 {
     public sealed class StartupTask : IBackgroundTask
@@ -11,6 +13,9 @@ namespace RaspPi3.MqttBrokerHost
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {
+            if (taskInstance == null)
+                throw new ArgumentNullException(nameof(taskInstance), "Task is not allowed to be null");
+
             backgroundTraskDeferral = taskInstance.GetDeferral();
 
             var mqttBroker = new MqttBroker();

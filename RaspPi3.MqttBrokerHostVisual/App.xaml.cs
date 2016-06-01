@@ -1,5 +1,7 @@
 ﻿using Okra;
+using System;
 
+[assembly: CLSCompliant(false)]
 namespace RaspPi3.MqttBrokerHostVisual
 {
     /// <summary>

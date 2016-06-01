@@ -32,7 +32,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
             dispatchTimer.Tick += (s, e) =>
             {
                 RefreshControls();
-                mqttConnector.Publish(mqttUser.TopicsToSubscribe[0], "RaspPi3: I'm is still alive.");
+                mqttConnector.Publish(mqttUser.TopicsToSubscribe[0], "RaspPi3: I'm is still alive. " + DateTime.Now);
             };
 
             dispatchTimer.Start();
@@ -101,7 +101,8 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
             set
             {
                 CloudMqttBroker enumParse;
-                Enum.TryParse(value, out enumParse);
+                if (!Enum.TryParse(value, out enumParse))
+                    enumParse = CloudMqttBroker.Default;
                 mqttConnection.BrokerPort = enumParse;
                 OnPropertyChanged();
             }

@@ -5,7 +5,7 @@ using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
-    class MqttConnector
+    internal class MqttConnector
     {
         internal string LatestPublishedTopic = string.Empty;
         internal string LatestPublishedMessage = string.Empty;
@@ -42,7 +42,8 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         internal void Connect()
         {
             int port;
-            int.TryParse(mqttConnection.BrokerPort.ToString("d"), out port);
+            if (!int.TryParse(mqttConnection.BrokerPort.ToString("d"), out port))
+                throw new InvalidCastException("No valid Port given.");
 
             mqttClient = new MqttClient(mqttConnection.BrokerName, port, mqttConnection.IsSecureConnection, mqttConnection.MqttSslProtocols);
             AddEvents();
@@ -71,10 +72,10 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             mqttClient.Subscribe(new string[] { topic.Name }, new byte[] { topic.QualityOfService });
         }
 
-        internal void Publish(MqttTopic topic, string message)
+        internal void Publish(MqttTopic topic, string messageToPublish)
         {
-            mqttClient.Publish(topic.Name, Encoding.UTF8.GetBytes(message), topic.QualityOfService, true);
-            LatestPublishedMessage = message;
+            mqttClient.Publish(topic.Name, Encoding.UTF8.GetBytes(messageToPublish), topic.QualityOfService, true);
+            LatestPublishedMessage = messageToPublish;
             LatestPublishedTopic = topic.Name;
         }
 
