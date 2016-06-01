@@ -96,7 +96,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\MqttConnection.cs" />
     <Compile Include="Model\MqttConnector.cs" />
+    <Compile Include="Model\MqttTopic.cs" />
     <Compile Include="Model\MqttUser.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="View\MainPage.xaml.cs">

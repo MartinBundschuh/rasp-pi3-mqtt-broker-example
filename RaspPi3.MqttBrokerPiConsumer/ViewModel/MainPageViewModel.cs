@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
+using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
 
 namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
 {
@@ -13,10 +14,37 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly MqttConnector mqttConnector = new MqttConnector();
         private string errorMessage = string.Empty;
+        private readonly MqttUser mqttUser;
+        private readonly MqttConnection mqttConnection;
 
         public MainPageViewModel()
         {
+            // TODO: GetByUserName
+            mqttUser = mqttConnector.mqttUser;
+            mqttConnection = mqttUser.Connection;
+
             IsConnected = true;
+            var dispatchTimer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 0, 10)
+            };
+
+            dispatchTimer.Tick += (s, e) =>
+            {
+                RefreshControls();
+                mqttConnector.Publish(mqttUser.TopicsToSubscribe[0], "RaspPi3: I'm is still alive.");
+            };
+
+            dispatchTimer.Start();
+        }
+
+        private void RefreshControls()
+        {
+            IsConnected = mqttConnector.IsConnected;
+            LatestPublishedMessage = mqttConnector.LatestPublishedMessage;
+            LatestPublishedTopic = mqttConnector.LatestPublishedTopic;
+            LatestReceivedMessage = mqttConnector.LatestReceivedMessage;
+            LatestReceivedTopic = mqttConnector.LatestReceivedTopic;
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -29,7 +57,12 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
             get { return mqttConnector.IsConnected; }
             set
             {
-                TryConnectOrDisconnectAndSetError(value);
+                ErrorMessage = string.Empty;
+                IsVisible = IsVisible;
+
+                if (value != mqttConnector.IsConnected)
+                    TryConnectOrDisconnectAndSetError(value);
+
                 IsReadOnly = mqttConnector.IsConnected;
                 // Event seems not to be triggered.
                 OnPropertyChanged();
@@ -38,8 +71,6 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
 
         private void TryConnectOrDisconnectAndSetError(bool value)
         {
-            errorMessage = string.Empty;
-            IsVisible = IsVisible;
             try
             {
                 if (value)
@@ -56,20 +87,22 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
 
         public string BrokerName
         {
-            get { return mqttConnector.BrokerName; }
+            get { return mqttConnection.BrokerName; }
             set
             {
-                mqttConnector.BrokerName = value;
+                mqttConnection.BrokerName = value;
                 OnPropertyChanged();
             }
         }
 
         public string BrokerPort
         {
-            get { return mqttConnector.BrokerPort; }
+            get { return mqttConnection.BrokerPort.ToString("d"); }
             set
             {
-                mqttConnector.BrokerPort = value;
+                CloudMqttBroker enumParse;
+                Enum.TryParse(value, out enumParse);
+                mqttConnection.BrokerPort = enumParse;
                 OnPropertyChanged();
             }
         }
@@ -93,6 +126,30 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
         public Visibility IsVisible
         {
             get { return string.IsNullOrEmpty(errorMessage) ? Visibility.Collapsed : Visibility.Visible; }
+            private set { OnPropertyChanged(); }
+        }
+
+        public string LatestPublishedTopic
+        {
+            get { return mqttConnector.LatestPublishedTopic; }
+            private set { OnPropertyChanged(); }
+        }
+
+        public string LatestPublishedMessage
+        {
+            get { return mqttConnector.LatestPublishedMessage; }
+            private set { OnPropertyChanged(); }
+        }
+
+        public string LatestReceivedTopic
+        {
+            get { return mqttConnector.LatestReceivedTopic; }
+            private set { OnPropertyChanged(); }
+        }
+
+        public string LatestReceivedMessage
+        {
+            get { return mqttConnector.LatestReceivedMessage; }
             private set { OnPropertyChanged(); }
         }
     }
