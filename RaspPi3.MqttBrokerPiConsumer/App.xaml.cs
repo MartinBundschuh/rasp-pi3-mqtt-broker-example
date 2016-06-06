@@ -24,18 +24,15 @@ namespace RaspPi3.MqttBrokerPiConsumer
         {
             InitializeComponent();
 
-            if (true)
-                FirstSetup();
+            SetupSqLite();
         }
 
-        private static void FirstSetup()
+        private static void SetupSqLite()
         {
             using (var sqLiteHandler = new SqLiteHandler())
-            {
-                sqLiteHandler.DropAllTables();
-                sqLiteHandler.CreateAllTables();
-            }
+                sqLiteHandler.SyncDataTables();
 
+            // Can be removed. Still there to validate insert method.
             InsertFirstSetupData();
         }
 

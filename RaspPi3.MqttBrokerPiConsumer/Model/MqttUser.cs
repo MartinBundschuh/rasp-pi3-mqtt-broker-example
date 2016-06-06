@@ -6,7 +6,7 @@ using static RaspPi3.MqttBrokerPiConsumer.Model.MqttTopic;
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     [Type(typeof(MqttUser))]
-    [Table("MqttUsers")]
+    [Table(nameof(MqttUser))]
     public class MqttUser : SqLiteSaveableObject
     {
         [PrimaryKey]

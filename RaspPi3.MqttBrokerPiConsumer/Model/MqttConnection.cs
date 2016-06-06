@@ -4,7 +4,7 @@ using uPLibrary.Networking.M2Mqtt;
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     [Type(typeof(MqttConnection))]
-    [Table("MqttConnections")]
+    [Table(nameof(MqttConnection))]
     public class MqttConnection : SqLiteSaveableObject
     {
         public enum CloudMqttBrokerPort { Default = 11599, Ssl = 21599, Tsl = 31599 }

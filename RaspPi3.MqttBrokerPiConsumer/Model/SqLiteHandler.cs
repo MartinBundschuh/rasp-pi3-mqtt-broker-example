@@ -65,26 +65,14 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             }
         }
 
-        internal void DropAllTables()
+        internal void SyncDataTables()
         {
             foreach (var type in TypeAttribute.GetTypeAttributes())
             {
-                ConnectIfNecessary();
-                connection.DropTable(type);
-            }
-        }
-
-        internal void CreateAllTables()
-        {
-            CreateTables(TypeAttribute.GetTypeAttributes());
-        }
-
-        internal void CreateTables(IEnumerable<Type> types)
-        {
-            foreach (var type in types)
-            {
-                ConnectIfNecessary();
-                connection.CreateTable(type);
+                if (connection.GetTableInfo(type.Name).Count > 0)
+                    connection.MigrateTable(type);
+                else
+                    connection.CreateTable(type);
             }
         }
 
@@ -124,7 +112,6 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         internal TableQuery<T> Select<T>() where T : SqLiteSaveableObject
         {
-            ConnectIfNecessary();
             return connection.Table<T>();
         }
         public void Dispose()

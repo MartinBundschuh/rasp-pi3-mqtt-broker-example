@@ -3,7 +3,7 @@
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     [Type(typeof(MqttTopic))]
-    [Table("MqttTopics")]
+    [Table(nameof(MqttTopic))]
     public class MqttTopic : SqLiteSaveableObject
     {
         public enum ChannelAccesMode { None = 0, Read = 1, Write = 2, ReadWrite = 3 }
