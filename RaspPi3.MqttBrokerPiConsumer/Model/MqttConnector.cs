@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using uPLibrary.Networking.M2Mqtt;
-using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
@@ -11,43 +11,35 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         internal string LatestPublishedMessage = string.Empty;
         internal string LatestReceivedTopic = string.Empty;
         internal string LatestReceivedMessage = string.Empty;
+        public bool IsConnected { get { return mqttClient != null && mqttClient.IsConnected; } }
 
         private MqttClient mqttClient;
         internal MqttUser mqttUser;
-        private readonly MqttConnection mqttConnection;
 
         internal MqttConnector()
         {
-            var newConnection = new MqttConnection
+            using (var db = new SqLiteHandler())
             {
-                BrokerName = "m21.cloudmqtt.com",
-                BrokerPort = CloudMqttBroker.Ssl,
-                MqttSslProtocols = MqttSslProtocols.SSLv3,
-                IsSecureConnection = true
-            };
+                var connectionQuery = db.Select<MqttConnection>();
+                var mqttConnection = connectionQuery.FirstOrDefault(c => c.BrokerName == "m21.cloudmqtt.com");
 
-            mqttUser = new MqttUser
-            {
-                UserName = "ti8mRaspPi3",
-                ClientId = Guid.NewGuid().ToString(),
-                Password = "ti8m",
-                Connection = newConnection
-            };
-
-            mqttUser.TopicsToSubscribe = mqttUser.GetTopicsToSubscribe();
-            mqttConnection = newConnection;
+                var userQuery = db.Select<MqttUser>();
+                mqttUser = userQuery.FirstOrDefault(u => u.BrokerName == mqttConnection.BrokerName);
+                mqttUser.Connection = mqttConnection;
+            }
         }
 
         internal void Connect()
         {
             int port;
-            if (!int.TryParse(mqttConnection.BrokerPort.ToString("d"), out port))
+            if (!int.TryParse(mqttUser.Connection.BrokerPort.ToString("d"), out port))
                 throw new InvalidCastException("No valid Port given.");
 
-            mqttClient = new MqttClient(mqttConnection.BrokerName, port, mqttConnection.IsSecureConnection, mqttConnection.MqttSslProtocols);
+            mqttClient = new MqttClient(mqttUser.Connection.BrokerName, port,
+                mqttUser.Connection.IsSecureConnection, mqttUser.Connection.SslProtocol);
             AddEvents();
             SubscribeToTopics();
-            mqttClient.Connect(mqttUser.ClientId, mqttUser.UserName, mqttUser.Password);
+            mqttClient.Connect(mqttUser.ClientId, mqttUser.Name, mqttUser.Password);
         }
 
         private void AddEvents()
@@ -61,7 +53,6 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         private void SubscribeToTopics()
         {
-            // TODO: Get all relevant Topics
             foreach (var topic in mqttUser.TopicsToSubscribe)
                 Subscribe(topic);
         }
@@ -85,7 +76,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 mqttClient.Disconnect();
             ClearMessageFields();
 
-            // Seems to be an asynchronous function inside.
+            // Seems to be an async function inside.
             while (mqttClient != null && mqttClient.IsConnected) { }
         }
 
@@ -96,7 +87,5 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             LatestReceivedMessage = string.Empty;
             LatestReceivedTopic = string.Empty;
         }
-
-        public bool IsConnected { get { return mqttClient != null && mqttClient.IsConnected; } }
     }
 }

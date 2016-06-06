@@ -2,6 +2,7 @@
 using RaspPi3.MqttBrokerPiConsumer.Model;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
@@ -12,18 +13,19 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
     internal class MainPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private readonly MqttConnector mqttConnector = new MqttConnector();
+        private readonly MqttConnector mqttConnector;
         private string errorMessage = string.Empty;
-        private readonly MqttUser mqttUser;
-        private readonly MqttConnection mqttConnection;
 
         public MainPageViewModel()
         {
-            // TODO: GetByUserName
-            mqttUser = mqttConnector.mqttUser;
-            mqttConnection = mqttUser.Connection;
-
+            mqttConnector= new MqttConnector();
             IsConnected = true;
+
+            StartPublishToTestTimerIntervall();
+        }
+
+        private void StartPublishToTestTimerIntervall()
+        {
             var dispatchTimer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 10)
@@ -32,7 +34,8 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
             dispatchTimer.Tick += (s, e) =>
             {
                 RefreshControls();
-                mqttConnector.Publish(mqttUser.TopicsToSubscribe[0], "RaspPi3: I'm is still alive. " + DateTime.Now);
+                mqttConnector.Publish(mqttConnector.mqttUser.TopicsToSubscribe
+                    .FirstOrDefault(t => t.Name == "TestChannel"), "RaspPi3: I'm is still alive. " + DateTime.Now);
             };
 
             dispatchTimer.Start();
@@ -87,23 +90,23 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
 
         public string BrokerName
         {
-            get { return mqttConnection.BrokerName; }
+            get { return mqttConnector.mqttUser.Connection.BrokerName; }
             set
             {
-                mqttConnection.BrokerName = value;
+                mqttConnector.mqttUser.Connection.BrokerName = value;
                 OnPropertyChanged();
             }
         }
 
         public string BrokerPort
         {
-            get { return mqttConnection.BrokerPort.ToString("d"); }
+            get { return mqttConnector.mqttUser.Connection.BrokerPort.ToString("d"); }
             set
             {
-                CloudMqttBroker enumParse;
+                CloudMqttBrokerPort enumParse;
                 if (!Enum.TryParse(value, out enumParse))
-                    enumParse = CloudMqttBroker.Default;
-                mqttConnection.BrokerPort = enumParse;
+                    enumParse = CloudMqttBrokerPort.Default;
+                mqttConnector.mqttUser.Connection.BrokerPort = enumParse;
                 OnPropertyChanged();
             }
         }

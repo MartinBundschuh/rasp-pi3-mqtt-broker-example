@@ -15,15 +15,26 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
     internal class SqLiteHandler : IDisposable
     {
-        private readonly string path;
+        internal ObservableCollection<MqttUser> MqttUsers { get; set; }
+        internal ObservableCollection<MqttTopic> MqttTopics { get; set; }
+        internal ObservableCollection<MqttConnection> MqttConnections { get; set; }
+
+        private readonly string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "db.sqlite");
         private SQLiteConnection connection;
+
+        private readonly List<object> addedOrModifies = new List<object>();
+        private readonly List<object> removed = new List<object>();
 
         internal SqLiteHandler()
         {
-            path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "db.sqlite");
-            connection = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);
-
+            ConnectIfNecessary();
             SetUpLists();
+        }
+
+        private void ConnectIfNecessary()
+        {
+            if (connection == null)
+                connection = new SQLiteConnection(new SQLite.Net.Platform.WinRT.SQLitePlatformWinRT(), path);
         }
 
         private void SetUpLists()
@@ -40,35 +51,6 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             return list;
         }
 
-        internal void CreateTables(IEnumerable<Type> types)
-        {
-            foreach (var type in types)
-                connection.CreateTable(type);
-        }
-
-        public void Dispose()
-        {
-            if (connection != null)
-            {
-                try
-                {
-                    connection.Dispose();
-                }
-                finally
-                {
-                    connection = null;
-                }
-            }
-            GC.SuppressFinalize(this);
-        }
-
-        internal ObservableCollection<MqttUser> MqttUsers { get; set; }
-        internal ObservableCollection<MqttTopic> MqttTopics { get; set; }
-        internal ObservableCollection<MqttConnection> MqttConnections { get; set; }
-
-        private readonly List<object> addedOrModifies = new List<object>();
-        private readonly List<object> removed = new List<object>();
-
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
@@ -83,6 +65,29 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             }
         }
 
+        internal void DropAllTables()
+        {
+            foreach (var type in TypeAttribute.GetTypeAttributes())
+            {
+                ConnectIfNecessary();
+                connection.DropTable(type);
+            }
+        }
+
+        internal void CreateAllTables()
+        {
+            CreateTables(TypeAttribute.GetTypeAttributes());
+        }
+
+        internal void CreateTables(IEnumerable<Type> types)
+        {
+            foreach (var type in types)
+            {
+                ConnectIfNecessary();
+                connection.CreateTable(type);
+            }
+        }
+
         internal async Task SaveChangesAsync()
         {
             if (addedOrModifies.Count > 0)
@@ -90,7 +95,10 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 await Task.Run(() =>
                 {
                     foreach (var toAdd in addedOrModifies)
-                        connection.InsertOrReplace(toAdd);
+                    {
+                        ConnectIfNecessary();
+                        connection.InsertOrReplace(toAdd, toAdd.GetType());
+                    }
                 });
             }
 
@@ -99,15 +107,40 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 await Task.Run(() =>
                 {
                     foreach (var toRemove in removed)
+                    {
+                        ConnectIfNecessary();
                         connection.Delete(toRemove);
+                    }
                 });
             }
         }
 
         internal async Task<TableQuery<T>> SelectAsync<T>() where T : SqLiteSaveableObject
         {
+            ConnectIfNecessary();
             var returnQuery = await Task.Run(() => connection.Table<T>());
             return returnQuery;
+        }
+
+        internal TableQuery<T> Select<T>() where T : SqLiteSaveableObject
+        {
+            ConnectIfNecessary();
+            return connection.Table<T>();
+        }
+        public void Dispose()
+        {
+            if (connection != null)
+            {
+                try
+                {
+                    connection.Dispose();
+                }
+                finally
+                {
+                    connection = null;
+                }
+            }
+            GC.SuppressFinalize(this);
         }
     }
 }

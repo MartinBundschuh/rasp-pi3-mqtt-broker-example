@@ -7,12 +7,12 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
     [Table("MqttConnections")]
     public class MqttConnection : SqLiteSaveableObject
     {
-        public enum CloudMqttBroker { Default = 11599, Ssl = 21599, Tsl = 31599 }
+        public enum CloudMqttBrokerPort { Default = 11599, Ssl = 21599, Tsl = 31599 }
 
         [PrimaryKey]
         public string BrokerName { get; set; }
-        public CloudMqttBroker BrokerPort { get; set; }
-        public MqttSslProtocols MqttSslProtocols { get; set; }
+        public CloudMqttBrokerPort BrokerPort { get; set; }
+        public MqttSslProtocols SslProtocol { get; set; }
         public bool IsSecureConnection { get; set; }
     }
 }

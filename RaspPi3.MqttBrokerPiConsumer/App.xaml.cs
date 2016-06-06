@@ -1,10 +1,11 @@
 ﻿using Okra;
 using RaspPi3.MqttBrokerPiConsumer.Model;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using uPLibrary.Networking.M2Mqtt;
+using uPLibrary.Networking.M2Mqtt.Messages;
 using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
+using static RaspPi3.MqttBrokerPiConsumer.Model.MqttTopic;
 
 [assembly: CLSCompliant(false)]
 namespace RaspPi3.MqttBrokerPiConsumer
@@ -23,26 +24,53 @@ namespace RaspPi3.MqttBrokerPiConsumer
         {
             InitializeComponent();
 
-            using (var sqLiteHandler = new SqLiteHandler())
-                sqLiteHandler.CreateTables(TypeAttribute.GetTypeAttributes());
+            if (true)
+                FirstSetup();
+        }
 
+        private static void FirstSetup()
+        {
+            using (var sqLiteHandler = new SqLiteHandler())
+            {
+                sqLiteHandler.DropAllTables();
+                sqLiteHandler.CreateAllTables();
+            }
+
+            InsertFirstSetupData();
+        }
+
+        private static void InsertFirstSetupData()
+        {
             var newConnection = new MqttConnection
             {
                 BrokerName = "m21.cloudmqtt.com",
-                BrokerPort = CloudMqttBroker.Ssl,
-                MqttSslProtocols = MqttSslProtocols.SSLv3,
+                BrokerPort = CloudMqttBrokerPort.Ssl,
+                SslProtocol = MqttSslProtocols.SSLv3,
                 IsSecureConnection = true
             };
 
-            MqttConnection selectCon;
+            var newMqttUser = new MqttUser
+            {
+                Name = "ti8mRaspPi3",
+                ClientId = Guid.NewGuid().ToString(),
+                BrokerName = newConnection.BrokerName,
+                Password = "ti8m"
+            };
+
+            var newMqttTopic = new MqttTopic
+            {
+                UserName = newMqttUser.Name,
+                Name = "TestChannel",
+                AcessMode = ChannelAccesMode.ReadWrite,
+                QualityOfService = MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE
+            };
+
             using (var db = new SqLiteHandler())
             {
                 db.MqttConnections.Add(newConnection);
+                db.MqttUsers.Add(newMqttUser);
+                db.MqttTopics.Add(newMqttTopic);
                 Task.Run(() => db.SaveChangesAsync());
-
-                // working, but save not done at this moment since it's async
-                var borkerQuery = db.SelectAsync<MqttConnection>();
-                selectCon = borkerQuery.Result.FirstOrDefault(c => c.BrokerName == "m21.cloudmqtt.com");
             }
         }
     }

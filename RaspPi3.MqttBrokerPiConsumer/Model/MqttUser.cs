@@ -1,6 +1,7 @@
 ﻿using SQLite.Net.Attributes;
 using System.Collections.Generic;
-using uPLibrary.Networking.M2Mqtt.Messages;
+using System.Linq;
+using static RaspPi3.MqttBrokerPiConsumer.Model.MqttTopic;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
@@ -9,32 +10,25 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
     public class MqttUser : SqLiteSaveableObject
     {
         [PrimaryKey]
-        public string UserName { get; set; }
+        public string Name { get; set; }
         public string ClientId { get; set; }
         public string Password { get; set; }
         [Indexed]
-        public string MqttConnectionBrokerName { get; set; }
+        public string BrokerName { get; set; }
         [Ignore]
-        public virtual MqttConnection Connection { get; set; }
+        internal virtual MqttConnection Connection { get; set; }
         [Ignore]
-        public virtual List<MqttTopic> TopicsToSubscribe { get; set; }
-
-        internal List<MqttTopic> GetTopicsToSubscribe()
+        internal virtual List<MqttTopic> TopicsToSubscribe
         {
-            if (TopicsToSubscribe == null)
+            get
             {
-                // TODO: Select all topics where UserName = this.Name and Acess = Read or ReadWrite and iterate overit
-                TopicsToSubscribe = new List<MqttTopic>();
-                TopicsToSubscribe.Add(new MqttTopic
+                using (var db = new SqLiteHandler())
                 {
-                    User = this,
-                    Name = "TestConnection",
-                    Acess = MqttTopic.AccessMode.ReadWrite,
-                    QualityOfService = MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE
-                });
+                    return db.Select<MqttTopic>()
+                        .Where(t => t.UserName == Name && (t.AcessMode == ChannelAccesMode.Read || t.AcessMode == ChannelAccesMode.ReadWrite))
+                        .ToList();
+                }
             }
-
-            return TopicsToSubscribe;
         }
     }
 }
