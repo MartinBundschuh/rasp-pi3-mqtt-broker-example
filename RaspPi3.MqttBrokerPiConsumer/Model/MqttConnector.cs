@@ -18,7 +18,6 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         internal MqttConnector()
         {
-            //mqttUser = new MqttUser("ti8mRaspPi3");
             var newConnection = new MqttConnection
             {
                 BrokerName = "m21.cloudmqtt.com",

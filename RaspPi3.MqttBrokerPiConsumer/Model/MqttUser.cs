@@ -6,7 +6,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     [Type(typeof(MqttUser))]
     [Table("MqttUsers")]
-    public class MqttUser
+    public class MqttUser : SqLiteSaveableObject
     {
         [PrimaryKey]
         public string UserName { get; set; }
