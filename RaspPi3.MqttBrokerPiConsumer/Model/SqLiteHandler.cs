@@ -9,7 +9,7 @@ using Windows.Storage;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
-    public class SqLiteSaveableObject
+    public class SQLiteSaveAbleObject
     {
     }
 
@@ -39,12 +39,12 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         private void SetUpLists()
         {
-            MqttUsers = GetInstantiatedList<MqttUser>(MqttUsers);
-            MqttConnections = GetInstantiatedList<MqttConnection>(MqttConnections);
-            MqttTopics = GetInstantiatedList<MqttTopic>(MqttTopics);
+            MqttUsers = GetInstantiatedList(MqttUsers);
+            MqttConnections = GetInstantiatedList(MqttConnections);
+            MqttTopics = GetInstantiatedList(MqttTopics);
         }
 
-        private ObservableCollection<T> GetInstantiatedList<T>(ObservableCollection<T> list) where T : SqLiteSaveableObject
+        private ObservableCollection<T> GetInstantiatedList<T>(ObservableCollection<T> list) where T : SQLiteSaveAbleObject
         {
             list = new ObservableCollection<T>();
             list.CollectionChanged += OnCollectionChanged;
@@ -103,14 +103,14 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             }
         }
 
-        internal async Task<TableQuery<T>> SelectAsync<T>() where T : SqLiteSaveableObject
+        internal async Task<TableQuery<T>> SelectAsync<T>() where T : SQLiteSaveAbleObject
         {
             ConnectIfNecessary();
             var returnQuery = await Task.Run(() => connection.Table<T>());
             return returnQuery;
         }
 
-        internal TableQuery<T> Select<T>() where T : SqLiteSaveableObject
+        internal TableQuery<T> Select<T>() where T : SQLiteSaveAbleObject
         {
             return connection.Table<T>();
         }

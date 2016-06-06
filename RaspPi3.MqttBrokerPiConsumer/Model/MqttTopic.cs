@@ -4,9 +4,9 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     [Type(typeof(MqttTopic))]
     [Table(nameof(MqttTopic))]
-    public class MqttTopic : SqLiteSaveableObject
+    public class MqttTopic : SQLiteSaveAbleObject
     {
-        public enum ChannelAccesMode { None = 0, Read = 1, Write = 2, ReadWrite = 3 }
+        public enum ChannelAccessMode { None = 0, Read = 1, Write = 2, ReadWrite = 3 }
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -15,7 +15,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         [Ignore]
         internal MqttUser User { get; set; }
         public string Name { get; set; }
-        public ChannelAccesMode AcessMode { get; set; }
+        public ChannelAccessMode AccessMode { get; set; }
         public byte QualityOfService { get; set; }
     }
 }

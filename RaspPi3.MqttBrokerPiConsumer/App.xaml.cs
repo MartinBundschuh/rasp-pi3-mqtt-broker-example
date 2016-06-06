@@ -58,7 +58,7 @@ namespace RaspPi3.MqttBrokerPiConsumer
             {
                 UserName = newMqttUser.Name,
                 Name = "TestChannel",
-                AcessMode = ChannelAccesMode.ReadWrite,
+                AccessMode = ChannelAccessMode.ReadWrite,
                 QualityOfService = MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE
             };
 

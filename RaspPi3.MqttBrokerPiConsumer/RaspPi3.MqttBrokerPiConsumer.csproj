@@ -102,7 +102,7 @@
     <Compile Include="Model\MqttConnector.cs" />
     <Compile Include="Model\MqttTopic.cs" />
     <Compile Include="Model\MqttUser.cs" />
-    <Compile Include="Model\SqLiteHandler.cs" />
+    <Compile Include="Model\SQLiteHandler.cs" />
     <Compile Include="Model\TypeAttribute.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="View\MainPage.xaml.cs">

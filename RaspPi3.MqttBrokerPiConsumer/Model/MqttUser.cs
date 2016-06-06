@@ -7,7 +7,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     [Type(typeof(MqttUser))]
     [Table(nameof(MqttUser))]
-    public class MqttUser : SqLiteSaveableObject
+    public class MqttUser : SQLiteSaveAbleObject
     {
         [PrimaryKey]
         public string Name { get; set; }
@@ -25,7 +25,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 using (var db = new SqLiteHandler())
                 {
                     return db.Select<MqttTopic>()
-                        .Where(t => t.UserName == Name && (t.AcessMode == ChannelAccesMode.Read || t.AcessMode == ChannelAccesMode.ReadWrite))
+                        .Where(t => t.UserName == Name && (t.AccessMode == ChannelAccessMode.Read || t.AccessMode == ChannelAccessMode.ReadWrite))
                         .ToList();
                 }
             }
