@@ -8,7 +8,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
     {
     }
 
-    internal class JsonHandler
+    internal static class JsonHandler
     {
         internal static string GetStringFromObject<T>(T objectToSerialize) where T : IJsonConvertAble
         {
@@ -19,9 +19,11 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         {
             var dataContractJsonSerializer = new DataContractJsonSerializer(typeof(T));
 
-            var memoryStream = new MemoryStream();
-            dataContractJsonSerializer.WriteObject(memoryStream, objectToSerialize);
-            return memoryStream.ToArray();
+            using (var memoryStream = new MemoryStream())
+            {
+                dataContractJsonSerializer.WriteObject(memoryStream, objectToSerialize);
+                return memoryStream.ToArray();
+            }
         }
     }
 }

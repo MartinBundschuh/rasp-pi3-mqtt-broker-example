@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using uPLibrary.Networking.M2Mqtt;
@@ -89,7 +90,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         private static string GetTimeString()
         {
-            return string.Format("[{0}] ", DateTime.Now.TimeOfDay);
+            return string.Format(CultureInfo.CurrentCulture, "[{0}] ", DateTime.Now.TimeOfDay);
         }
     }
 }
