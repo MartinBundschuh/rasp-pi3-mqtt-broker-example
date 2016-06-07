@@ -33,7 +33,7 @@ namespace RaspPi3.MqttBrokerPiConsumer
                 sqLiteHandler.SyncDataTables();
 
             // Can be removed. Still there to validate insert method.
-            InsertFirstSetupData();
+            //InsertFirstSetupData();
         }
 
         private static void InsertFirstSetupData()

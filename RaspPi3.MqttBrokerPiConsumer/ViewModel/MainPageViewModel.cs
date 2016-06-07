@@ -35,7 +35,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
             {
                 RefreshControls();
                 mqttConnector.Publish(mqttConnector.mqttUser.TopicsToSubscribe
-                    .FirstOrDefault(t => t.Name == "TestChannel"), "RaspPi3: I'm is still alive. " + DateTime.Now);
+                    .FirstOrDefault(t => t.Name == "TestChannel"), mqttConnector.mqttUser);
             };
 
             dispatchTimer.Start();

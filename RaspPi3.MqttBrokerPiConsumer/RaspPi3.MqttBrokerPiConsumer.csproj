@@ -98,6 +98,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\JsonHandler.cs" />
     <Compile Include="Model\MqttConnection.cs" />
     <Compile Include="Model\MqttConnector.cs" />
     <Compile Include="Model\MqttTopic.cs" />

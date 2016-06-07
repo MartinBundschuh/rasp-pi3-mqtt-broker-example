@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using uPLibrary.Networking.M2Mqtt;
@@ -11,10 +12,10 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         internal string LatestPublishedMessage = string.Empty;
         internal string LatestReceivedTopic = string.Empty;
         internal string LatestReceivedMessage = string.Empty;
-        public bool IsConnected { get { return mqttClient != null && mqttClient.IsConnected; } }
+        internal bool IsConnected { get { return mqttClient != null && mqttClient.IsConnected; } }
 
-        private MqttClient mqttClient;
         internal MqttUser mqttUser;
+        private MqttClient mqttClient;
 
         internal MqttConnector()
         {
@@ -37,8 +38,9 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
             mqttClient = new MqttClient(mqttUser.Connection.BrokerName, port,
                 mqttUser.Connection.IsSecureConnection, mqttUser.Connection.SslProtocol);
+
             AddEvents();
-            SubscribeToTopics();
+            SubscribeToTopics(mqttUser.TopicsToSubscribe);
             mqttClient.Connect(mqttUser.ClientId, mqttUser.Name, mqttUser.Password);
         }
 
@@ -47,25 +49,20 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             mqttClient.MqttMsgPublishReceived += (s, e) =>
             {
                 LatestReceivedTopic = e.Topic;
-                LatestReceivedMessage = Encoding.UTF8.GetString(e.Message);
+                LatestReceivedMessage = GetTimeString() + Encoding.UTF8.GetString(e.Message);
             };
         }
 
-        private void SubscribeToTopics()
+        private void SubscribeToTopics(List<MqttTopic> topics)
         {
-            foreach (var topic in mqttUser.TopicsToSubscribe)
-                Subscribe(topic);
+            mqttClient.Subscribe(topics.Select(t => t.Name).ToArray()
+                , topics.Select(t => t.QualityOfService).ToArray());
         }
 
-        private void Subscribe(MqttTopic topic)
+        internal void Publish<T>(MqttTopic topic, T messageToPublish) where T : IJsonConvertAble
         {
-            mqttClient.Subscribe(new string[] { topic.Name }, new byte[] { topic.QualityOfService });
-        }
-
-        internal void Publish(MqttTopic topic, string messageToPublish)
-        {
-            mqttClient.Publish(topic.Name, Encoding.UTF8.GetBytes(messageToPublish), topic.QualityOfService, true);
-            LatestPublishedMessage = messageToPublish;
+            mqttClient.Publish(topic.Name, JsonHandler.GetBytesFromObject(messageToPublish), topic.QualityOfService, true);
+            LatestPublishedMessage = GetTimeString() + JsonHandler.GetStringFromObject(messageToPublish);
             LatestPublishedTopic = topic.Name;
         }
 
@@ -77,7 +74,9 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             ClearMessageFields();
 
             // Seems to be an async function inside.
-            while (mqttClient != null && mqttClient.IsConnected) { }
+            while (mqttClient != null && mqttClient.IsConnected)
+            {
+            }
         }
 
         private void ClearMessageFields()
@@ -86,6 +85,11 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             LatestPublishedTopic = string.Empty;
             LatestReceivedMessage = string.Empty;
             LatestReceivedTopic = string.Empty;
+        }
+
+        private static string GetTimeString()
+        {
+            return string.Format("[{0}] ", DateTime.Now.TimeOfDay);
         }
     }
 }
