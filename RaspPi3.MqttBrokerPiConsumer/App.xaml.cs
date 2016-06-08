@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
+using Windows.Devices.WiFi;
 using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
 using static RaspPi3.MqttBrokerPiConsumer.Model.MqttTopic;
 
@@ -32,12 +33,22 @@ namespace RaspPi3.MqttBrokerPiConsumer
             using (var sqLiteHandler = new SqLiteHandler())
                 sqLiteHandler.SyncDataTables();
 
-            // Can be removed. Still there to validate insert method.
+            // Can be removed. Still there to validate insert method
+            // or if RaspPi has to be reinstalled.
             //InsertFirstSetupData();
+
+            //WifiConnector.ConnectToWifiIfPossibleAsync();
         }
 
         private static void InsertFirstSetupData()
         {
+            var wifi = new WifiConnection
+            {
+                Ssid = "ti8m-IoT",
+                password = "****",
+                RecconectionKind = WiFiReconnectionKind.Automatic
+            };
+
             var newConnection = new MqttConnection
             {
                 BrokerName = "m21.cloudmqtt.com",
@@ -51,7 +62,7 @@ namespace RaspPi3.MqttBrokerPiConsumer
                 Name = "ti8mRaspPi3",
                 ClientId = Guid.NewGuid().ToString(),
                 BrokerName = newConnection.BrokerName,
-                Password = "ti8m"
+                Password = "****"
             };
 
             var newMqttTopic = new MqttTopic
@@ -64,6 +75,7 @@ namespace RaspPi3.MqttBrokerPiConsumer
 
             using (var db = new SqLiteHandler())
             {
+                db.WifiConnections.Add(wifi);
                 db.MqttConnections.Add(newConnection);
                 db.MqttUsers.Add(newMqttUser);
                 db.MqttTopics.Add(newMqttTopic);

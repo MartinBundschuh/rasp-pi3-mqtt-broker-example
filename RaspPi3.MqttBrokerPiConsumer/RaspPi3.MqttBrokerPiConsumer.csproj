@@ -30,7 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
@@ -107,6 +107,8 @@
     <Compile Include="Model\MqttUser.cs" />
     <Compile Include="Model\SQLiteHandler.cs" />
     <Compile Include="Model\TypeAttribute.cs" />
+    <Compile Include="Model\WifiConnection.cs" />
+    <Compile Include="Model\WifiConnector.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

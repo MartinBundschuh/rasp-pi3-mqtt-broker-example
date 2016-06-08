@@ -6,7 +6,7 @@ using uPLibrary.Networking.M2Mqtt;
 namespace RaspPi3.MqttBrokerHostVisual.ViewModel
 {
     [ViewModelExport(SpecialPageNames.Home)]
-    internal class MainPageViewModel : INotifyPropertyChanged
+    public class MainPageViewModel : INotifyPropertyChanged
     {
         private readonly MqttBroker mqttBroker; // MyOwnMqttBroker mqttBroker
         public event PropertyChangedEventHandler PropertyChanged;

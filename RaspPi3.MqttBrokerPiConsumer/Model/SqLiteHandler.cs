@@ -17,9 +17,10 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
     internal class SqLiteHandler : IDisposable
     {
-        internal ObservableCollection<MqttUser> MqttUsers { get; set; }
-        internal ObservableCollection<MqttTopic> MqttTopics { get; set; }
-        internal ObservableCollection<MqttConnection> MqttConnections { get; set; }
+        internal ObservableCollection<MqttUser> MqttUsers { get; private set; }
+        internal ObservableCollection<MqttTopic> MqttTopics { get; private set; }
+        internal ObservableCollection<MqttConnection> MqttConnections { get; private set; }
+        internal ObservableCollection<WifiConnection> WifiConnections { get; private set; }
 
         private readonly string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "db.sqlite");
         private SQLiteConnection connection;
@@ -44,6 +45,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             MqttUsers = GetInstantiatedList(MqttUsers);
             MqttConnections = GetInstantiatedList(MqttConnections);
             MqttTopics = GetInstantiatedList(MqttTopics);
+            WifiConnections = GetInstantiatedList(WifiConnections);
         }
 
         private ObservableCollection<T> GetInstantiatedList<T>(ObservableCollection<T> list) where T : SQLiteSaveAbleObject

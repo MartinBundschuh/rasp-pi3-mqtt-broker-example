@@ -4,32 +4,24 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using uPLibrary.Networking.M2Mqtt.Exceptions;
 using Windows.UI.Xaml;
 using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
 
 namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
 {
     [ViewModelExport(SpecialPageNames.Home)]
-    internal class MainPageViewModel : INotifyPropertyChanged
+    public class MainPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly MqttConnector mqttConnector;
         private string errorMessage = string.Empty;
+        private readonly DispatcherTimer dispatchTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 10) };
 
         public MainPageViewModel()
         {
             mqttConnector= new MqttConnector();
             IsConnected = true;
-
-            StartPublishToTestTimerIntervall();
-        }
-
-        private void StartPublishToTestTimerIntervall()
-        {
-            var dispatchTimer = new DispatcherTimer
-            {
-                Interval = new TimeSpan(0, 0, 10)
-            };
 
             dispatchTimer.Tick += (s, e) =>
             {
@@ -37,7 +29,6 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
                 mqttConnector.Publish(mqttConnector.mqttUser.TopicsToSubscribe
                     .FirstOrDefault(t => t.Name == "TestChannel"), mqttConnector.mqttUser);
             };
-
             dispatchTimer.Start();
         }
 
@@ -61,13 +52,12 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
             set
             {
                 ErrorMessage = string.Empty;
-                IsVisible = IsVisible;
+                IsErrorMessageVisible = IsErrorMessageVisible;
 
                 if (value != mqttConnector.IsConnected)
                     TryConnectOrDisconnectAndSetError(value);
 
                 IsReadOnly = mqttConnector.IsConnected;
-                // Event seems not to be triggered.
                 OnPropertyChanged();
             }
         }
@@ -81,10 +71,10 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
                 else
                     mqttConnector.DisConnect();
             }
-            catch (Exception e)
+            catch (MqttConnectionException e)
             {
                 ErrorMessage = e.Message;
-                IsVisible = IsVisible;
+                IsErrorMessageVisible = IsErrorMessageVisible;
             }
         }
 
@@ -104,7 +94,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
             set
             {
                 CloudMqttBrokerPort enumParse;
-                if (!Enum.TryParse(value, out enumParse))
+                if (!Enum.TryParse(value, out enumParse) || enumParse == CloudMqttBrokerPort.None)
                     enumParse = CloudMqttBrokerPort.Default;
                 mqttConnector.mqttUser.Connection.BrokerPort = enumParse;
                 OnPropertyChanged();
@@ -127,7 +117,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
             }
         }
 
-        public Visibility IsVisible
+        public Visibility IsErrorMessageVisible
         {
             get { return string.IsNullOrEmpty(errorMessage) ? Visibility.Collapsed : Visibility.Visible; }
             private set { OnPropertyChanged(); }
