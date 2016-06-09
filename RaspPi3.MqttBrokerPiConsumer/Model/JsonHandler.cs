@@ -10,12 +10,12 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
     internal static class JsonHandler
     {
-        internal static string GetStringFromObject<T>(T objectToSerialize) where T : IJsonConvertAble
+        internal static string GetJsonStringFromObject<T>(T objectToSerialize) where T : IJsonConvertAble
         {
-            return Encoding.UTF8.GetString(GetBytesFromObject(objectToSerialize));
+            return Encoding.UTF8.GetString(GetJsonBytesFromObject(objectToSerialize));
         }
 
-        internal static byte[] GetBytesFromObject<T>(T objectToSerialize) where T : IJsonConvertAble
+        internal static byte[] GetJsonBytesFromObject<T>(T objectToSerialize) where T : IJsonConvertAble
         {
             var dataContractJsonSerializer = new DataContractJsonSerializer(typeof(T));
 

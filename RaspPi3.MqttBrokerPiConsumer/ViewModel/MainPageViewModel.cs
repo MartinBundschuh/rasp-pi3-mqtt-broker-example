@@ -2,6 +2,7 @@
 using RaspPi3.MqttBrokerPiConsumer.Model;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using uPLibrary.Networking.M2Mqtt.Exceptions;
@@ -16,20 +17,24 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly MqttConnector mqttConnector;
         private string errorMessage = string.Empty;
-        private readonly DispatcherTimer dispatchTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 10) };
+        private readonly DispatcherTimer dispatchTimer;
 
         public MainPageViewModel()
         {
             mqttConnector= new MqttConnector();
             IsConnected = true;
 
-            dispatchTimer.Tick += (s, e) =>
+            if (Debugger.IsAttached)
             {
-                RefreshControls();
-                mqttConnector.Publish(mqttConnector.mqttUser.TopicsToSubscribe
-                    .FirstOrDefault(t => t.Name == "TestChannel"), mqttConnector.mqttUser);
-            };
-            dispatchTimer.Start();
+                dispatchTimer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 10) };
+                dispatchTimer.Tick += (s, e) =>
+                {
+                    RefreshControls();
+                    mqttConnector.Publish(mqttConnector.mqttUser.TopicsToSubscribe
+                        .FirstOrDefault(t => t.Name == "TestChannel"), mqttConnector.mqttUser);
+                };
+                dispatchTimer.Start();
+            }
         }
 
         private void RefreshControls()

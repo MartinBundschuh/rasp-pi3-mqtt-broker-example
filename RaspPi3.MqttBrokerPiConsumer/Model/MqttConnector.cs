@@ -62,8 +62,8 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         internal void Publish<T>(MqttTopic topic, T messageToPublish) where T : IJsonConvertAble
         {
-            mqttClient.Publish(topic.Name, JsonHandler.GetBytesFromObject(messageToPublish), topic.QualityOfService, true);
-            LatestPublishedMessage = GetTimeString() + JsonHandler.GetStringFromObject(messageToPublish);
+            mqttClient.Publish(topic.Name, JsonHandler.GetJsonBytesFromObject(messageToPublish), topic.QualityOfService, true);
+            LatestPublishedMessage = GetTimeString() + JsonHandler.GetJsonStringFromObject(messageToPublish);
             LatestPublishedTopic = topic.Name;
         }
 

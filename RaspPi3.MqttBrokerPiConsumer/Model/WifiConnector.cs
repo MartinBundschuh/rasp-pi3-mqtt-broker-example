@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.WiFi;
@@ -13,28 +14,29 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         private static WiFiAvailableNetwork network;
         private static WifiConnection connection;
 
-        internal async static void ConnectToWifiIfPossibleAsync()
+        internal async static void ConnectToWifiIfNeededAsync()
         {
-            try
+            if (IsWifiConnectionNeeded() && await IsAllowedToAccessAsync())
+                ConnectToWifiIfPossibleAsync();
+        }
+
+        private static bool IsWifiConnectionNeeded()
+        {
+            return !NetworkInterface.GetIsNetworkAvailable();
+        }
+
+        private static async void ConnectToWifiIfPossibleAsync()
+        {
+            InitializeWifiAdapterAsync();
+            InitializeConnection();
+            InitializeAvailableNetworkAsync();
+
+            var passwordCredential = new PasswordCredential
             {
-                // It's sync because of debugging.
-                if (await IsAllowedToAccessAsync())
-                    InitializeWifiAdapterAsync();
+                Password = connection.password
+            };
 
-                InitializeConnection();
-                InitializeAvailableNetworkAsync();
-
-                var passwordCredential = new PasswordCredential
-                {
-                    Password = connection.password
-                };
-
-                await wifiAdapter.ConnectAsync(network, connection.RecconectionKind, passwordCredential);
-            }
-            catch (Exception e)
-            {
-                var debug = e.Message;
-            }
+            await wifiAdapter.ConnectAsync(network, connection.RecconectionKind, passwordCredential);
         }
 
         private static async Task<bool> IsAllowedToAccessAsync()
@@ -61,9 +63,12 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         private static async void InitializeAvailableNetworkAsync()
         {
-            await wifiAdapter.ScanAsync();
-            network = wifiAdapter.NetworkReport.AvailableNetworks
-                .FirstOrDefault(n => n.Ssid == connection.Ssid);
+            if (wifiAdapter != null)
+            {
+                await wifiAdapter.ScanAsync();
+                network = wifiAdapter.NetworkReport.AvailableNetworks
+                    .FirstOrDefault(n => n.Ssid == connection.Ssid);
+            }
         }
     }
 }
