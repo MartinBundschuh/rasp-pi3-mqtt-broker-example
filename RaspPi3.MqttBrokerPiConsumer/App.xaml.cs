@@ -24,8 +24,6 @@ namespace RaspPi3.MqttBrokerPiConsumer
             : base(new AppBootstrapper())
         {
             InitializeComponent();
-
-            // TODO: Run this method for first device setup.
             SetupSqLite(false);
             WifiConnector.ConnectToWifiIfNeededAsync();
         }
@@ -41,7 +39,7 @@ namespace RaspPi3.MqttBrokerPiConsumer
 
         private static void InsertFirstSetupData()
         {
-            // TODO: Set up your WiFI connection info.
+            // TODO: Set up your WiFi connection info.
             var wifi = new WifiConnection
             {
                 Ssid = "ti8m-IoT",
@@ -57,7 +55,7 @@ namespace RaspPi3.MqttBrokerPiConsumer
                 IsSecureConnection = true
             };
 
-            // TODO: Set up your Mqttbroker login data.
+            // TODO: Set up your MQTT Broker login data.
             var newMqttUser = new MqttUser
             {
                 Name = "ti8mRaspPi3",

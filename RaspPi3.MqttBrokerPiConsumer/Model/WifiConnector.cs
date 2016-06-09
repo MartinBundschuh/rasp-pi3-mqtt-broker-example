@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
 using Windows.Devices.WiFi;
+using Windows.Networking.Connectivity;
 using Windows.Security.Credentials;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
@@ -14,35 +15,42 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         private static WiFiAvailableNetwork network;
         private static WifiConnection connection;
 
-        internal async static void ConnectToWifiIfNeededAsync()
+        internal async static Task ConnectToWifiIfNeededAsync()
         {
             if (IsWifiConnectionNeeded() && await IsAllowedToAccessAsync())
-                ConnectToWifiIfPossibleAsync();
+                await ConnectToWifiIfPossibleAsync();
         }
 
         private static bool IsWifiConnectionNeeded()
         {
-            return !NetworkInterface.GetIsNetworkAvailable();
+            return Debugger.IsAttached ? true : !NetworkInterface.GetIsNetworkAvailable();
         }
 
-        private static async void ConnectToWifiIfPossibleAsync()
+        private static async Task ConnectToWifiIfPossibleAsync()
         {
-            InitializeWifiAdapterAsync();
-            InitializeConnection();
-            InitializeAvailableNetworkAsync();
-
-            var passwordCredential = new PasswordCredential
+            try
             {
-                Password = connection.password
-            };
+                await InitializeWifiAdapterAsync();
+                InitializeConnection();
+                await InitializeAvailableNetworkAsync();
 
-            await wifiAdapter.ConnectAsync(network, connection.RecconectionKind, passwordCredential);
+                var passwordCredential = new PasswordCredential
+                {
+                    Password = connection.password
+                };
+
+                await wifiAdapter.ConnectAsync(network, connection.RecconectionKind, passwordCredential);
+            }
+            catch (Exception e)
+            {
+                if (Debugger.IsAttached)
+                    throw new Exception("WifiError", e);
+            }
         }
 
         private static async Task<bool> IsAllowedToAccessAsync()
         {
-            var access = await WiFiAdapter.RequestAccessAsync();
-            return access == WiFiAccessStatus.Allowed;
+            return await WiFiAdapter.RequestAccessAsync() == WiFiAccessStatus.Allowed;
         }
 
         private static void InitializeConnection()
@@ -54,21 +62,36 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             }
         }
 
-        private static async void InitializeWifiAdapterAsync()
+        private static async Task InitializeWifiAdapterAsync()
         {
-            var wifiAdapters = await DeviceInformation.FindAllAsync(WiFiAdapter.GetDeviceSelector());
-            if (wifiAdapters.Count > 0)
-                wifiAdapter = await WiFiAdapter.FromIdAsync(wifiAdapters[0].Id);
+            var wifiAdapters = await WiFiAdapter.FindAllAdaptersAsync();
+            wifiAdapter = wifiAdapters.FirstOrDefault();
+            if (wifiAdapter == null)
+                throw new Exception("No WiFi Adapter could be found.");
         }
 
-        private static async void InitializeAvailableNetworkAsync()
+        private static async Task InitializeAvailableNetworkAsync()
         {
             if (wifiAdapter != null)
             {
                 await wifiAdapter.ScanAsync();
                 network = wifiAdapter.NetworkReport.AvailableNetworks
                     .FirstOrDefault(n => n.Ssid == connection.Ssid);
+                if (network == null)
+                    throw new Exception("No Network could be found.");
             }
+        }
+
+        internal static void DisconnectIfConnected()
+        {
+            if (IsConnected())
+                wifiAdapter.Disconnect();
+        }
+
+        internal static bool IsConnected()
+        {
+            var con = NetworkInformation.GetInternetConnectionProfile();
+            return con != null && con.IsWlanConnectionProfile && wifiAdapter != null;
         }
     }
 }
