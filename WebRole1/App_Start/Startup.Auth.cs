@@ -8,10 +8,10 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using WebRole1.Providers;
-using WebRole1.Models;
+using RaspPi3WebRole.Providers;
+using RaspPi3WebRole.Models;
 
-namespace WebRole1
+namespace RaspPi3WebRole
 {
     public partial class Startup
     {

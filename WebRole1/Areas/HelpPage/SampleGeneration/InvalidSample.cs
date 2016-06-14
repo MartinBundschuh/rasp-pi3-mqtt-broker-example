@@ -1,6 +1,6 @@
 using System;
 
-namespace WebRole1.Areas.HelpPage
+namespace RaspPi3WebRole.Areas.HelpPage
 {
     /// <summary>
     /// This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.

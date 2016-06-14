@@ -11,10 +11,10 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using WebRole1.Areas.HelpPage.ModelDescriptions;
-using WebRole1.Areas.HelpPage.Models;
+using RaspPi3WebRole.Areas.HelpPage.ModelDescriptions;
+using RaspPi3WebRole.Areas.HelpPage.Models;
 
-namespace WebRole1.Areas.HelpPage
+namespace RaspPi3WebRole.Areas.HelpPage
 {
     public static class HelpPageConfigurationExtensions
     {

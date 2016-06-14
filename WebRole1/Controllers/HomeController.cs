@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace WebRole1.Controllers
+namespace RaspPi3WebRole.Controllers
 {
     public class HomeController : Controller
     {

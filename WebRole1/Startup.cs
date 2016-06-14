@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(WebRole1.Startup))]
+[assembly: OwinStartup(typeof(RaspPi3WebRole.Startup))]
 
-namespace WebRole1
+namespace RaspPi3WebRole
 {
     public partial class Startup
     {

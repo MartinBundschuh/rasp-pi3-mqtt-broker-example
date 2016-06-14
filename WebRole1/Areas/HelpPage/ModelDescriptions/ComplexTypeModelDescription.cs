@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace WebRole1.Areas.HelpPage.ModelDescriptions
+namespace RaspPi3WebRole.Areas.HelpPage.ModelDescriptions
 {
     public class ComplexTypeModelDescription : ModelDescription
     {

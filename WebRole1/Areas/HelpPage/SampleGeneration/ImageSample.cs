@@ -1,6 +1,6 @@
 using System;
 
-namespace WebRole1.Areas.HelpPage
+namespace RaspPi3WebRole.Areas.HelpPage
 {
     /// <summary>
     /// This represents an image sample on the help page. There's a display template named ImageSample associated with this class.

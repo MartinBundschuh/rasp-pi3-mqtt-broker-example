@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace WebRole1.Controllers
+namespace RaspPi3WebRole.Controllers
 {
     [Authorize]
     public class ValuesController : ApiController

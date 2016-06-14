@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace WebRole1
+namespace RaspPi3WebRole
 {
     public class FilterConfig
     {

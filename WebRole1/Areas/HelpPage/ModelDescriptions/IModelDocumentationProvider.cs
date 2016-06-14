@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace WebRole1.Areas.HelpPage.ModelDescriptions
+namespace RaspPi3WebRole.Areas.HelpPage.ModelDescriptions
 {
     public interface IModelDocumentationProvider
     {

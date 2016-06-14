@@ -9,9 +9,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using WebRole1.Models;
+using RaspPi3WebRole.Models;
 
-namespace WebRole1.Providers
+namespace RaspPi3WebRole.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {

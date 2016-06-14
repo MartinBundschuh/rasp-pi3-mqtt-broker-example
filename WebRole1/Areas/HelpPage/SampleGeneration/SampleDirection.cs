@@ -1,4 +1,4 @@
-namespace WebRole1.Areas.HelpPage
+namespace RaspPi3WebRole.Areas.HelpPage
 {
     /// <summary>
     /// Indicates whether the sample is used for request or response

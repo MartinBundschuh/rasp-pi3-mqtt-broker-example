@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WebRole1.Models
+namespace RaspPi3WebRole.Models
 {
     // Models returned by AccountController actions.
 

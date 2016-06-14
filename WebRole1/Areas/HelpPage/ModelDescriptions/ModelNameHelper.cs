@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace WebRole1.Areas.HelpPage.ModelDescriptions
+namespace RaspPi3WebRole.Areas.HelpPage.ModelDescriptions
 {
     internal static class ModelNameHelper
     {

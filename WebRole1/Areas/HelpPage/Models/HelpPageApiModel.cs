@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
-using WebRole1.Areas.HelpPage.ModelDescriptions;
+using RaspPi3WebRole.Areas.HelpPage.ModelDescriptions;
 
-namespace WebRole1.Areas.HelpPage.Models
+namespace RaspPi3WebRole.Areas.HelpPage.Models
 {
     /// <summary>
     /// The model that represents an API displayed on the help page.

@@ -3,7 +3,7 @@ using System.Text;
 using System.Web;
 using System.Web.Http.Description;
 
-namespace WebRole1.Areas.HelpPage
+namespace RaspPi3WebRole.Areas.HelpPage
 {
     public static class ApiDescriptionExtensions
     {

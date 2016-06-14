@@ -5,7 +5,7 @@ using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 
-namespace WebRole1
+namespace RaspPi3WebRole
 {
     public class WebRole : RoleEntryPoint
     {

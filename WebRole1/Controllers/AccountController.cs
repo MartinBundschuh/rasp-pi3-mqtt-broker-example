@@ -13,11 +13,11 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using WebRole1.Models;
-using WebRole1.Providers;
-using WebRole1.Results;
+using RaspPi3WebRole.Models;
+using RaspPi3WebRole.Providers;
+using RaspPi3WebRole.Results;
 
-namespace WebRole1.Controllers
+namespace RaspPi3WebRole.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]

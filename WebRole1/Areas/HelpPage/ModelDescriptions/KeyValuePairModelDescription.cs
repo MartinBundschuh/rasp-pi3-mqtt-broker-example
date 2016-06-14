@@ -1,4 +1,4 @@
-namespace WebRole1.Areas.HelpPage.ModelDescriptions
+namespace RaspPi3WebRole.Areas.HelpPage.ModelDescriptions
 {
     public class KeyValuePairModelDescription : ModelDescription
     {

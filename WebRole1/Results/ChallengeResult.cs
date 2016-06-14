@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace WebRole1.Results
+namespace RaspPi3WebRole.Results
 {
     public class ChallengeResult : IHttpActionResult
     {

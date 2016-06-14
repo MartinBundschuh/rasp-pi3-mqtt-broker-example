@@ -1,10 +1,10 @@
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using WebRole1.Areas.HelpPage.ModelDescriptions;
-using WebRole1.Areas.HelpPage.Models;
+using RaspPi3WebRole.Areas.HelpPage.ModelDescriptions;
+using RaspPi3WebRole.Areas.HelpPage.Models;
 
-namespace WebRole1.Areas.HelpPage.Controllers
+namespace RaspPi3WebRole.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.
