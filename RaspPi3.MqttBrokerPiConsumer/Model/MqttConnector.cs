@@ -50,7 +50,10 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             mqttClient.MqttMsgPublishReceived += (s, e) =>
             {
                 LatestReceivedTopic = e.Topic;
-                LatestReceivedMessage = GetTimeString() + Encoding.UTF8.GetString(e.Message);
+                var messageString = Encoding.UTF8.GetString(e.Message);
+                LatestReceivedMessage = string.Concat(GetTimeString(), messageString);
+                // TODO: Get the right type depending on the topic.
+                var mqttUser = JsonHandler.GetObjectFromJsonString<MqttUser>(messageString);
             };
         }
 

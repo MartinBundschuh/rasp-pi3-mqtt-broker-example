@@ -25,7 +25,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
                 queryKeyString = String.Join("_", queryKeys);
             }
 
-            StringBuilder friendlyPath = new StringBuilder();
+            var friendlyPath = new StringBuilder();
             friendlyPath.AppendFormat("{0}-{1}",
                 description.HttpMethod.Method,
                 localPath.Replace("/", "-").Replace("{", String.Empty).Replace("}", String.Empty));

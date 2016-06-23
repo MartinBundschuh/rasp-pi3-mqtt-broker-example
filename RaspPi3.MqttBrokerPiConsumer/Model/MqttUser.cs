@@ -14,10 +14,12 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         [DataMember]
         [PrimaryKey]
         public string Name { get; set; }
+        [DataMember]
         public string ClientId { get; set; }
         public string Password { get; set; }
         [Indexed]
         public string BrokerName { get; set; }
+        [DataMember]
         [Ignore]
         internal virtual MqttConnection Connection { get; set; }
         [Ignore]

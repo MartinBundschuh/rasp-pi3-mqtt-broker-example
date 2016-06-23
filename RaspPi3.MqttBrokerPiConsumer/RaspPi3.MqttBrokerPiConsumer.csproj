@@ -101,6 +101,7 @@
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Model\JsonHandler.cs" />
+    <Compile Include="Model\WebApiMessage.cs" />
     <Compile Include="Model\MqttConnection.cs" />
     <Compile Include="Model\MqttConnector.cs" />
     <Compile Include="Model\MqttTopic.cs" />

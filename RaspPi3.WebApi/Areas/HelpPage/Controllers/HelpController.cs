@@ -1,14 +1,16 @@
+using RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions;
+using RaspPi3.WebApi.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions;
-using RaspPi3.WebApi.Areas.HelpPage.Models;
 
 namespace RaspPi3.WebApi.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.
     /// </summary>
+    [System.Web.Mvc.Authorize]
+    [RequireHttps]
     public class HelpController : Controller
     {
         private const string ErrorViewName = "Error";

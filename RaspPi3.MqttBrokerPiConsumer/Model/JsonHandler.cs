@@ -25,5 +25,15 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 return memoryStream.ToArray();
             }
         }
+
+        internal static T GetObjectFromJsonString<T>(string jsonString) where T : IJsonConvertAble
+        {
+            var dataContractJsonSerializer = new DataContractJsonSerializer(typeof(T));
+
+            using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonString)))
+            {
+                return (T)(dataContractJsonSerializer.ReadObject(memoryStream));
+            }
+        }
     }
 }
