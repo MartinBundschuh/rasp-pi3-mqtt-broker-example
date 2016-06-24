@@ -21,7 +21,10 @@ namespace RaspPi3.WebApi
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/CustomBootstrap.css"));
+
+            BundleTable.EnableOptimizations = true;
         }
     }
 }
