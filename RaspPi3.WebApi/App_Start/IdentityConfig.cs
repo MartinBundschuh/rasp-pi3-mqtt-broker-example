@@ -34,8 +34,11 @@ namespace RaspPi3.WebApi
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
-                RequireUppercase = true,
+                RequireUppercase = true
             };
+
+            manager.MaxFailedAccessAttemptsBeforeLockout = 3;
+
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
