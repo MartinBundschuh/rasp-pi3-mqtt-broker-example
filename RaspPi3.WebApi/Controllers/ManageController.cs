@@ -11,6 +11,7 @@ using System.Web.Mvc;
 namespace RaspPi3.WebApi.Controllers
 {
     [Authorize]
+    [RequireHttps]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;

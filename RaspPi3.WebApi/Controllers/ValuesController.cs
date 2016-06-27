@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Mvc;
 
 namespace RaspPi3.WebApi.Controllers
 {
-    [Authorize]
+    [System.Web.Mvc.Authorize]
+    [RequireHttps]
     public class ValuesController : ApiController
     {
         // GET api/values
