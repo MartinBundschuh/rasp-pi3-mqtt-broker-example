@@ -65,11 +65,10 @@ namespace RaspPi3.WebApi
             var userName = WebConfigurationManager.AppSettings["GmailUser"];
             var password = WebConfigurationManager.AppSettings["GmailPass"];
             var sentFrom = userName;
-            //var tslPort = 587;
-            var sslPort = 456;
+            const int tslPort = 587; //ssl=456 but not working
 
             using (var mail = new MailMessage(sentFrom, message.Destination, message.Subject, message.Body))
-            using (var client = new SmtpClient("smtp.gmail.com", sslPort))
+            using (var client = new SmtpClient("smtp.gmail.com", tslPort))
             {
                 client.Credentials = new NetworkCredential(userName, password);
                 client.EnableSsl = true;

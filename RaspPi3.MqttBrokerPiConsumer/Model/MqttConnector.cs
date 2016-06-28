@@ -15,7 +15,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         internal string LatestReceivedMessage = string.Empty;
         internal bool IsConnected { get { return mqttClient != null && mqttClient.IsConnected; } }
 
-        internal MqttUser mqttUser;
+        internal readonly MqttUser mqttUser;
         private MqttClient mqttClient;
 
         internal MqttConnector()

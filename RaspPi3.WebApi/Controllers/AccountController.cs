@@ -84,6 +84,9 @@ namespace RaspPi3.WebApi.Controllers
                 return View(model);
             }
 
+            if (!(await UserManager.IsEmailConfirmedAsync(UserManager.FindByEmail(model.Email).Id)))
+                return RedirectToAction(nameof(EmailNotConfirmed), "Account");
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
@@ -100,6 +103,14 @@ namespace RaspPi3.WebApi.Controllers
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View(model);
             }
+        }
+
+        //
+        // GET: /Account/EmailNotConfirmed
+        [AllowAnonymous]
+        public ActionResult EmailNotConfirmed()
+        {
+            return View(nameof(EmailNotConfirmed));
         }
 
         //
@@ -174,13 +185,21 @@ namespace RaspPi3.WebApi.Controllers
                     var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction(nameof(ConfirmMailSend), "Account");
                 }
                 AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        //
+        // GET: /Account/ConfirmMailSend
+        [AllowAnonymous]
+        public ActionResult ConfirmMailSend()
+        {
+            return View(nameof(ConfirmMailSend));
         }
 
         //

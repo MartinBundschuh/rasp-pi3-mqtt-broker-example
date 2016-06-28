@@ -9,7 +9,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
         {
             get
             {
-                return "HelpPage";
+                return nameof(HelpPage);
             }
         }
 

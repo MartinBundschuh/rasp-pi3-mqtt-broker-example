@@ -1,3 +1,5 @@
+using RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions;
+using RaspPi3.WebApi.Areas.HelpPage.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,8 +13,6 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions;
-using RaspPi3.WebApi.Areas.HelpPage.Models;
 
 namespace RaspPi3.WebApi.Areas.HelpPage
 {
@@ -236,7 +236,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
 
         private static HelpPageApiModel GenerateApiModel(ApiDescription apiDescription, HttpConfiguration config)
         {
-            HelpPageApiModel apiModel = new HelpPageApiModel()
+            var apiModel = new HelpPageApiModel
             {
                 ApiDescription = apiDescription,
             };
@@ -253,7 +253,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
 
         private static void GenerateUriParameters(HelpPageApiModel apiModel, ModelDescriptionGenerator modelGenerator)
         {
-            ApiDescription apiDescription = apiModel.ApiDescription;
+            var apiDescription = apiModel.ApiDescription;
             foreach (ApiParameterDescription apiParameter in apiDescription.ParameterDescriptions)
             {
                 if (apiParameter.Source == ApiParameterSource.FromUri)
@@ -282,7 +282,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
                     //     public int Y { get; set; }
                     // }
                     // Class Point is bindable with a TypeConverter, so Point will be added to UriParameters collection.
-                    // 
+                    //
                     // public class Point
                     // {
                     //     public int X { get; set; }
@@ -304,13 +304,13 @@ namespace RaspPi3.WebApi.Areas.HelpPage
 
                         if (!parameterDescriptor.IsOptional)
                         {
-                            uriParameter.Annotations.Add(new ParameterAnnotation() { Documentation = "Required" });
+                            uriParameter.Annotations.Add(new ParameterAnnotation { Documentation = "Required" });
                         }
 
                         object defaultValue = parameterDescriptor.DefaultValue;
                         if (defaultValue != null)
                         {
-                            uriParameter.Annotations.Add(new ParameterAnnotation() { Documentation = "Default value is " + Convert.ToString(defaultValue, CultureInfo.InvariantCulture) });
+                            uriParameter.Annotations.Add(new ParameterAnnotation { Documentation = "Default value is " + Convert.ToString(defaultValue, CultureInfo.InvariantCulture) });
                         }
                     }
                     else
@@ -340,7 +340,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
         private static ParameterDescription AddParameterDescription(HelpPageApiModel apiModel,
             ApiParameterDescription apiParameter, ModelDescription typeDescription)
         {
-            ParameterDescription parameterDescription = new ParameterDescription
+            var parameterDescription = new ParameterDescription
             {
                 Name = apiParameter.Name,
                 Documentation = apiParameter.Documentation,
@@ -441,7 +441,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
 
         private static ModelDescriptionGenerator InitializeModelDescriptionGenerator(HttpConfiguration config)
         {
-            ModelDescriptionGenerator modelGenerator = new ModelDescriptionGenerator(config);
+            var modelGenerator = new ModelDescriptionGenerator(config);
             Collection<ApiDescription> apis = config.Services.GetApiExplorer().ApiDescriptions;
             foreach (ApiDescription api in apis)
             {
@@ -457,7 +457,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
 
         private static void LogInvalidSampleAsError(HelpPageApiModel apiModel, object sample)
         {
-            InvalidSample invalidSample = sample as InvalidSample;
+            var invalidSample = sample as InvalidSample;
             if (invalidSample != null)
             {
                 apiModel.ErrorMessages.Add(invalidSample.ErrorMessage);

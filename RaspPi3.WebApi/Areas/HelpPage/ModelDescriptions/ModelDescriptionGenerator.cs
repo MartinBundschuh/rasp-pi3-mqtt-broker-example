@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ using System.Runtime.Serialization;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 
 namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
 {
@@ -24,37 +24,37 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
             { typeof(RequiredAttribute), a => "Required" },
             { typeof(RangeAttribute), a =>
                 {
-                    RangeAttribute range = (RangeAttribute)a;
+                    var range = (RangeAttribute)a;
                     return String.Format(CultureInfo.CurrentCulture, "Range: inclusive between {0} and {1}", range.Minimum, range.Maximum);
                 }
             },
             { typeof(MaxLengthAttribute), a =>
                 {
-                    MaxLengthAttribute maxLength = (MaxLengthAttribute)a;
+                    var maxLength = (MaxLengthAttribute)a;
                     return String.Format(CultureInfo.CurrentCulture, "Max length: {0}", maxLength.Length);
                 }
             },
             { typeof(MinLengthAttribute), a =>
                 {
-                    MinLengthAttribute minLength = (MinLengthAttribute)a;
+                    var minLength = (MinLengthAttribute)a;
                     return String.Format(CultureInfo.CurrentCulture, "Min length: {0}", minLength.Length);
                 }
             },
             { typeof(StringLengthAttribute), a =>
                 {
-                    StringLengthAttribute strLength = (StringLengthAttribute)a;
+                    var strLength = (StringLengthAttribute)a;
                     return String.Format(CultureInfo.CurrentCulture, "String length: inclusive between {0} and {1}", strLength.MinimumLength, strLength.MaximumLength);
                 }
             },
             { typeof(DataTypeAttribute), a =>
                 {
-                    DataTypeAttribute dataType = (DataTypeAttribute)a;
+                    var dataType = (DataTypeAttribute)a;
                     return String.Format(CultureInfo.CurrentCulture, "Data type: {0}", dataType.CustomDataType ?? dataType.DataType.ToString());
                 }
             },
             { typeof(RegularExpressionAttribute), a =>
                 {
-                    RegularExpressionAttribute regularExpression = (RegularExpressionAttribute)a;
+                    var regularExpression = (RegularExpressionAttribute)a;
                     return String.Format(CultureInfo.CurrentCulture, "Matching regular expression pattern: {0}", regularExpression.Pattern);
                 }
             },
@@ -90,7 +90,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
         {
             if (config == null)
             {
-                throw new ArgumentNullException("config");
+                throw new ArgumentNullException(nameof(config));
             }
 
             _documentationProvider = new Lazy<IModelDocumentationProvider>(() => config.Services.GetDocumentationProvider() as IModelDocumentationProvider);
@@ -111,7 +111,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
         {
             if (modelType == null)
             {
-                throw new ArgumentNullException("modelType");
+                throw new ArgumentNullException(nameof(modelType));
             }
 
             Type underlyingType = Nullable.GetUnderlyingType(modelType);
@@ -155,7 +155,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
 
                 if (genericArguments.Length == 1)
                 {
-                    Type enumerableType = typeof(IEnumerable<>).MakeGenericType(genericArguments);
+                    var enumerableType = typeof(IEnumerable<>).MakeGenericType(genericArguments);
                     if (enumerableType.IsAssignableFrom(modelType))
                     {
                         return GenerateCollectionModelDescription(modelType, genericArguments[0]);
@@ -163,13 +163,13 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
                 }
                 if (genericArguments.Length == 2)
                 {
-                    Type dictionaryType = typeof(IDictionary<,>).MakeGenericType(genericArguments);
+                    var dictionaryType = typeof(IDictionary<,>).MakeGenericType(genericArguments);
                     if (dictionaryType.IsAssignableFrom(modelType))
                     {
                         return GenerateDictionaryModelDescription(modelType, genericArguments[0], genericArguments[1]);
                     }
 
-                    Type keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(genericArguments);
+                    var keyValuePairType = typeof(KeyValuePair<,>).MakeGenericType(genericArguments);
                     if (keyValuePairType.IsAssignableFrom(modelType))
                     {
                         return GenerateKeyValuePairModelDescription(modelType, genericArguments[0], genericArguments[1]);
@@ -224,11 +224,11 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
 
         private static bool ShouldDisplayMember(MemberInfo member, bool hasDataContractAttribute)
         {
-            JsonIgnoreAttribute jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
-            XmlIgnoreAttribute xmlIgnore = member.GetCustomAttribute<XmlIgnoreAttribute>();
-            IgnoreDataMemberAttribute ignoreDataMember = member.GetCustomAttribute<IgnoreDataMemberAttribute>();
-            NonSerializedAttribute nonSerialized = member.GetCustomAttribute<NonSerializedAttribute>();
-            ApiExplorerSettingsAttribute apiExplorerSetting = member.GetCustomAttribute<ApiExplorerSettingsAttribute>();
+            var jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
+            var xmlIgnore = member.GetCustomAttribute<XmlIgnoreAttribute>();
+            var ignoreDataMember = member.GetCustomAttribute<IgnoreDataMemberAttribute>();
+            var nonSerialized = member.GetCustomAttribute<NonSerializedAttribute>();
+            var apiExplorerSetting = member.GetCustomAttribute<ApiExplorerSettingsAttribute>();
 
             bool hasMemberAttribute = member.DeclaringType.IsEnum ?
                 member.GetCustomAttribute<EnumMemberAttribute>() != null :
@@ -266,7 +266,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
 
         private void GenerateAnnotations(MemberInfo property, ParameterDescription propertyModel)
         {
-            List<ParameterAnnotation> annotations = new List<ParameterAnnotation>();
+            var annotations = new List<ParameterAnnotation>();
 
             IEnumerable<Attribute> attributes = property.GetCustomAttributes();
             foreach (Attribute attribute in attributes)
@@ -324,7 +324,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
 
         private ModelDescription GenerateComplexTypeModelDescription(Type modelType)
         {
-            ComplexTypeModelDescription complexModelDescription = new ComplexTypeModelDescription
+            var complexModelDescription = new ComplexTypeModelDescription
             {
                 Name = ModelNameHelper.GetModelName(modelType),
                 ModelType = modelType,
@@ -338,7 +338,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
             {
                 if (ShouldDisplayMember(property, hasDataContractAttribute))
                 {
-                    ParameterDescription propertyModel = new ParameterDescription
+                    var propertyModel = new ParameterDescription
                     {
                         Name = GetMemberName(property, hasDataContractAttribute)
                     };
@@ -359,7 +359,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
             {
                 if (ShouldDisplayMember(field, hasDataContractAttribute))
                 {
-                    ParameterDescription propertyModel = new ParameterDescription
+                    var propertyModel = new ParameterDescription
                     {
                         Name = GetMemberName(field, hasDataContractAttribute)
                     };
@@ -393,7 +393,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
 
         private EnumTypeModelDescription GenerateEnumTypeModelDescription(Type modelType)
         {
-            EnumTypeModelDescription enumDescription = new EnumTypeModelDescription
+            var enumDescription = new EnumTypeModelDescription
             {
                 Name = ModelNameHelper.GetModelName(modelType),
                 ModelType = modelType,
@@ -404,7 +404,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
             {
                 if (ShouldDisplayMember(field, hasDataContractAttribute))
                 {
-                    EnumValueDescription enumValue = new EnumValueDescription
+                    var enumValue = new EnumValueDescription
                     {
                         Name = field.Name,
                         Value = field.GetRawConstantValue().ToString()
@@ -437,7 +437,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
 
         private ModelDescription GenerateSimpleTypeModelDescription(Type modelType)
         {
-            SimpleTypeModelDescription simpleModelDescription = new SimpleTypeModelDescription
+            var simpleModelDescription = new SimpleTypeModelDescription
             {
                 Name = ModelNameHelper.GetModelName(modelType),
                 ModelType = modelType,

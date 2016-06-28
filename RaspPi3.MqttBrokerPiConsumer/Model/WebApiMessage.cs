@@ -13,7 +13,5 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         [DataMember]
         public MqttUser User { get; set; }
-
-        [DataMember]
     }
 }

@@ -11,7 +11,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
             Text = text;
         }
@@ -20,7 +20,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
 
         public override bool Equals(object obj)
         {
-            TextSample other = obj as TextSample;
+            var other = obj as TextSample;
             return other != null && Text == other.Text;
         }
 

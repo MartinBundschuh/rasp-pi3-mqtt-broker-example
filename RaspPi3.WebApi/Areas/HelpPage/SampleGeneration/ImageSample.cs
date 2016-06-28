@@ -15,7 +15,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
         {
             if (src == null)
             {
-                throw new ArgumentNullException("src");
+                throw new ArgumentNullException(nameof(src));
             }
             Src = src;
         }
@@ -24,7 +24,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
 
         public override bool Equals(object obj)
         {
-            ImageSample other = obj as ImageSample;
+            var other = obj as ImageSample;
             return other != null && Src == other.Src;
         }
 

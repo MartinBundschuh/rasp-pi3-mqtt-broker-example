@@ -30,11 +30,11 @@
                 <a class="navbar-brand" href="https://www.ti8m.ch/landing-page">
                     <img src="/Content/ti8m-logo-white.svg" alt="ti&m AG" />
                 </a>
-                @Html.ActionLink("RaspPi Web API", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("RaspPi Web API", "Index", "Home", new { area = string.Empty }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = string.Empty }, null)</li>
                     <li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
