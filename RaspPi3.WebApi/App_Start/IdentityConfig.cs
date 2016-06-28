@@ -4,8 +4,12 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using RaspPi3.WebApi.Models;
+using System;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 
 namespace RaspPi3.WebApi
 {
@@ -16,6 +20,7 @@ namespace RaspPi3.WebApi
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
+
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
@@ -38,6 +43,10 @@ namespace RaspPi3.WebApi
             };
 
             manager.MaxFailedAccessAttemptsBeforeLockout = 3;
+            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            manager.UserLockoutEnabledByDefault = true;
+
+            manager.EmailService = new EmailService();
 
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
@@ -45,6 +54,28 @@ namespace RaspPi3.WebApi
                 manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+    }
+
+    public class EmailService : IIdentityMessageService
+    {
+        public async Task SendAsync(IdentityMessage message)
+        {
+
+            var userName = WebConfigurationManager.AppSettings["GmailUser"];
+            var password = WebConfigurationManager.AppSettings["GmailPass"];
+            var sentFrom = userName;
+            //var tslPort = 587;
+            var sslPort = 456;
+
+            using (var mail = new MailMessage(sentFrom, message.Destination, message.Subject, message.Body))
+            using (var client = new SmtpClient("smtp.gmail.com", sslPort))
+            {
+                client.Credentials = new NetworkCredential(userName, password);
+                client.EnableSsl = true;
+
+                await client.SendMailAsync(mail);
+            }
         }
     }
 
