@@ -4,10 +4,6 @@ using System.Text;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
-    public interface IJsonConvertAble
-    {
-    }
-
     internal static class JsonHandler
     {
         internal static string GetJsonStringFromObject<T>(T objectToSerialize) where T : IJsonConvertAble

@@ -3,15 +3,12 @@
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     [DataContract]
-    public class WebApiMessage : IJsonConvertAble
+    public class WebApiMessage
     {
         [DataMember]
-        public string JsonString { get; set; }
+        public string ObjectSendJson { get; set; }
 
         [DataMember]
         public MqttTopic Topic { get; set; }
-
-        [DataMember]
-        public MqttUser User { get; set; }
     }
 }

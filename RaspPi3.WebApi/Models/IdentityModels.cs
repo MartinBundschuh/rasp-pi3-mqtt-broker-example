@@ -43,7 +43,7 @@ namespace RaspPi3.WebApi.Models
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationDataLossAllowed = false;
         }
     }
 }

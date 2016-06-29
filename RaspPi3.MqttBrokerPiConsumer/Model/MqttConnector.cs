@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using uPLibrary.Networking.M2Mqtt;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
@@ -38,7 +39,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 throw new InvalidCastException("No valid Port given.");
 
             mqttClient = new MqttClient(mqttUser.Connection.BrokerName, port,
-                mqttUser.Connection.IsSecureConnection, mqttUser.Connection.SslProtocol);
+                mqttUser.Connection.IsSecureConnection, (MqttSslProtocols)mqttUser.Connection.SslProtocol);
 
             AddEvents();
             SubscribeToTopics(mqttUser.TopicsToSubscribe);
@@ -49,12 +50,38 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         {
             mqttClient.MqttMsgPublishReceived += (s, e) =>
             {
-                LatestReceivedTopic = e.Topic;
                 var messageString = Encoding.UTF8.GetString(e.Message);
-                LatestReceivedMessage = string.Concat(GetTimeString(), messageString);
-                // TODO: Get the right type depending on the topic.
-                var mqttUser = JsonHandler.GetObjectFromJsonString<MqttUser>(messageString);
+                var mqttMessage = JsonHandler.GetObjectFromJsonString<MqttMessage<MqttUser>>(messageString);
+                LatestReceivedMessage = string.Concat(GetTimeString(), mqttMessage.ObjectSendJson);
+                LatestReceivedTopic = e.Topic;
+
+                ExecuteProperInstruction(mqttMessage.ObjectSendJson, e.Topic);
+
+                var wepApiMessage = new WebApiMessage
+                {
+                    ObjectSendJson = mqttMessage.ObjectSendJson,
+                    Topic = mqttUser.TopicsToSubscribe.FirstOrDefault(t => t.User == mqttMessage.SendFrom && t.Name == e.Topic)
+                };
+
+                SaveMessageWithWebService(wepApiMessage);
             };
+        }
+
+        private  async Task ExecuteProperInstruction(string objectToHandel, string topicName)
+        {
+            // TODO: Get the right type depending on the topic.
+            // Then handle some actions like login or do whatever it takes a.s.o. Call proper web Service.
+            switch (topicName)
+            {
+                case "TestChannel":
+                    var mqttUser = JsonHandler.GetObjectFromJsonString<MqttUser>(objectToHandel);
+                    break;
+            }
+        }
+
+        private async Task SaveMessageWithWebService(WebApiMessage wepApiMessage)
+        {
+
         }
 
         private void SubscribeToTopics(List<MqttTopic> topics)
@@ -63,10 +90,10 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 , topics.Select(t => t.QualityOfService).ToArray());
         }
 
-        internal void Publish<T>(MqttTopic topic, T messageToPublish) where T : IJsonConvertAble
+        internal void Publish(MqttTopic topic, MqttMessage<MqttUser> mqttMessageToPublish)
         {
-            mqttClient.Publish(topic.Name, JsonHandler.GetJsonBytesFromObject(messageToPublish), topic.QualityOfService, true);
-            LatestPublishedMessage = GetTimeString() + JsonHandler.GetJsonStringFromObject(messageToPublish);
+            mqttClient.Publish(topic.Name, JsonHandler.GetJsonBytesFromObject(mqttMessageToPublish), topic.QualityOfService, true);
+            LatestPublishedMessage = GetTimeString() + JsonHandler.GetJsonStringFromObject(mqttMessageToPublish);
             LatestPublishedTopic = topic.Name;
         }
 

@@ -22,7 +22,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navBarHeader">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -32,7 +32,7 @@
                 </a>
                 @Html.ActionLink("RaspPi Web API", "Index", "Home", new { area = string.Empty }, new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
+            <div class="navbar-collapse collapse" id="navBarHeader">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = string.Empty }, null)</li>
                     <li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>
@@ -47,7 +47,22 @@
         @RenderSection("SPAViews", required: false)
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - ti&m AG, Martin Bundschuh</p>
+            <div class="navbar navbar-inverse navbar-fixed-bottom">
+                <div class="container">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navBarFooter">
+                        <span class="icon-"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <div class="navbar-collapse collapse" id="navBarFooter">
+                        <ul class="nav navbar-nav">
+                            <li><a href="https://www.ti8m.ch">&copy; @DateTime.Now.Year - ti&m AG, Martin Bundschuh</a></li>
+                            <li><a href="whatsapp://send?text=Chekt out this nice Web API! https://rasppi3webapi20160622020016.azurewebsites.net">Share on WhatsApp!</a></li>
+                            <li><a href="mailto:%20?body=Check out this nice Web API! https://rasppi3webapi20160622020016.azurewebsites.net&subject=Nice Web API">Share with Mail!</a></li>
+                        </ul>
+                    </div>
+                 </div>
+             </div>
         </footer>
     </div>
 

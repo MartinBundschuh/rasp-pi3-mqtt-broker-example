@@ -1,9 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
+    [DataContract]
+    public class SQLiteSaveAbleObject
+    {
+    }
+
+    public interface IJsonConvertAble
+    {
+    }
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     internal sealed class TypeAttribute : Attribute
     {

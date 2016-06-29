@@ -100,14 +100,16 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Model\Enums.cs" />
+    <Compile Include="Model\InterfacesAbstractClassesTypes.cs" />
     <Compile Include="Model\JsonHandler.cs" />
-    <Compile Include="Model\WebApiMessage.cs" />
     <Compile Include="Model\MqttConnection.cs" />
-    <Compile Include="Model\MqttConnector.cs" />
+    <Compile Include="Model\MqttMessage.cs" />
     <Compile Include="Model\MqttTopic.cs" />
     <Compile Include="Model\MqttUser.cs" />
     <Compile Include="Model\SQLiteHandler.cs" />
-    <Compile Include="Model\TypeAttribute.cs" />
+    <Compile Include="Model\MqttConnector.cs" />
+    <Compile Include="Model\WebApiMessage.cs" />
     <Compile Include="Model\WifiConnection.cs" />
     <Compile Include="Model\WifiConnector.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
@@ -150,6 +152,9 @@
     <SDKReference Include="SQLite.UWP.2015, Version=3.13.0">
       <Name>SQLite for Universal Windows Platform</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

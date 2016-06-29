@@ -1,6 +1,5 @@
 ﻿using SQLite.Net.Attributes;
 using System.Runtime.Serialization;
-using uPLibrary.Networking.M2Mqtt;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
@@ -9,7 +8,6 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
     [Table(nameof(MqttConnection))]
     public class MqttConnection : SQLiteSaveAbleObject
     {
-        public enum CloudMqttBrokerPort {None = 0, Default = 11599, Ssl = 21599, Tls = 31599 }
 
         [DataMember]
         [PrimaryKey]
@@ -19,7 +17,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         public CloudMqttBrokerPort BrokerPort { get; set; }
 
         [DataMember]
-        public MqttSslProtocols SslProtocol { get; set; }
+        public MqttProtocol SslProtocol { get; set; }
 
         [DataMember]
         public bool IsSecureConnection { get; set; }

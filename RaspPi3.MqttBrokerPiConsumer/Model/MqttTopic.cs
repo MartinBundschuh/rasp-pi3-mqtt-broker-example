@@ -8,8 +8,6 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
     [Table(nameof(MqttTopic))]
     public class MqttTopic : SQLiteSaveAbleObject
     {
-        public enum ChannelAccessMode { None = 0, Read = 1, Write = 2, ReadWrite = 3 }
-
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 

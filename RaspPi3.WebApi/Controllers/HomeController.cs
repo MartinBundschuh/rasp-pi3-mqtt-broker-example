@@ -2,7 +2,6 @@
 
 namespace RaspPi3.WebApi.Controllers
 {
-    [Authorize]
     [RequireHttps]
     public class HomeController : Controller
     {

@@ -1,8 +1,8 @@
 ﻿using SQLite.Net.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using static RaspPi3.MqttBrokerPiConsumer.Model.MqttTopic;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {

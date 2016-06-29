@@ -2,11 +2,8 @@
 using RaspPi3.MqttBrokerPiConsumer.Model;
 using System;
 using System.Threading.Tasks;
-using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using Windows.Devices.WiFi;
-using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
-using static RaspPi3.MqttBrokerPiConsumer.Model.MqttTopic;
 
 [assembly: CLSCompliant(false)]
 namespace RaspPi3.MqttBrokerPiConsumer
@@ -51,7 +48,7 @@ namespace RaspPi3.MqttBrokerPiConsumer
             {
                 BrokerName = "m21.cloudmqtt.com",
                 BrokerPort = CloudMqttBrokerPort.Ssl,
-                SslProtocol = MqttSslProtocols.SSLv3,
+                SslProtocol = MqttProtocol.SslLevel3,
                 IsSecureConnection = true
             };
 

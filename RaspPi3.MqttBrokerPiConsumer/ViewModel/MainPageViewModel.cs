@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using uPLibrary.Networking.M2Mqtt.Exceptions;
 using Windows.UI.Xaml;
-using static RaspPi3.MqttBrokerPiConsumer.Model.MqttConnection;
 
 namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
 {
@@ -30,8 +29,14 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
                 dispatchTimer.Tick += (s, e) =>
                 {
                     RefreshControls();
+                    var mqttMessage = new MqttMessage<MqttUser>
+                    {
+                        SendFrom = mqttConnector.mqttUser,
+                        ObjectSendJson = JsonHandler.GetJsonStringFromObject(mqttConnector.mqttUser)
+                    };
+
                     mqttConnector.Publish(mqttConnector.mqttUser.TopicsToSubscribe
-                        .FirstOrDefault(t => t.Name == "TestChannel"), mqttConnector.mqttUser);
+                        .FirstOrDefault(t => t.Name == "TestChannel"), mqttMessage);
                 };
                 dispatchTimer.Start();
             }
