@@ -28,11 +28,11 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 var mqttConnection = connectionQuery.FirstOrDefault(c => c.BrokerName == "m21.cloudmqtt.com");
 
                 var userQuery = db.Select<MqttUser>();
-                mqttUser = userQuery.FirstOrDefault(u => u.BrokerName == mqttConnection.BrokerName);
+                mqttUser = userQuery.FirstOrDefault(u => u.BrokerName == mqttConnection.BrokerName && !u.Password.Contains("*"));
                 mqttUser.Connection = mqttConnection;
             }
 
-            apiHandler = new ApiHandler();
+            apiHandler = new ApiHandler(mqttUser);
         }
 
         internal void Connect()

@@ -6,8 +6,9 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
     [DataContract]
     public class WebApiMessage
     {
+        // Autoincrement
         [DataMember]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [DataMember]
         public DateTime TimeStampSend { get; set; }

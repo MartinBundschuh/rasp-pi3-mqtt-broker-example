@@ -21,26 +21,26 @@ namespace RaspPi3.MqttBrokerPiConsumer
             : base(new AppBootstrapper())
         {
             InitializeComponent();
-            SetupSqLite(false);
+            Task.Run(() => SetupSqLiteAsync(false));
             Task.Run(() => WifiConnector.ConnectToWifiIfNeededAsync());
         }
 
-        private static void SetupSqLite(bool runInitialDataSave)
+        private async static Task SetupSqLiteAsync(bool runInitialDataSave)
         {
             using (var sqLiteHandler = new SqLiteHandler())
                 sqLiteHandler.SyncDataTables();
 
             if (runInitialDataSave)
-                InsertFirstSetupData();
+                await InsertFirstSetupDataAsync();
         }
 
-        private static void InsertFirstSetupData()
+        private static async Task InsertFirstSetupDataAsync()
         {
             // TODO: Set up your WiFi connection info.
             var wifi = new WifiConnection
             {
                 Ssid = "ti8m-IoT",
-                password = "****",
+                Password = "****",
                 RecconectionKind = WiFiReconnectionKind.Automatic
             };
 
@@ -61,6 +61,16 @@ namespace RaspPi3.MqttBrokerPiConsumer
                 Password = "****"
             };
 
+            // TODO: Set up yout WebApi login info.
+            var newWebApiUser = new WebApiUser
+            {
+                Name = newMqttUser.Name,
+                Email = "userMail@provider.ch",
+                Password = "****",
+                BaseUrl = "https://rasppi3webapi20160622020016.azurewebsites.net/"
+            };
+
+            // TODO: Register for some Topics
             var newMqttTopic = new MqttTopic
             {
                 UserName = newMqttUser.Name,
@@ -75,7 +85,8 @@ namespace RaspPi3.MqttBrokerPiConsumer
                 db.MqttConnections.Add(newConnection);
                 db.MqttUsers.Add(newMqttUser);
                 db.MqttTopics.Add(newMqttTopic);
-                Task.Run(() => db.SaveChangesAsync());
+                db.WebApiUsers.Add(newWebApiUser);
+                await db.SaveChangesAsync();
             }
         }
     }

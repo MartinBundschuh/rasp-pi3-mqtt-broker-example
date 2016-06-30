@@ -7,6 +7,7 @@ using System.Web.Http;
 namespace RaspPi3.WebApi.Controllers
 {
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "CC0091")]
+    [Authorize]
     public class MqttMessageController : ApiController
     {
         const int topCount = 100;
@@ -23,7 +24,8 @@ namespace RaspPi3.WebApi.Controllers
             {
                 messagesToReturn = dbContext.MqttMessages
                     .Take(topCount)
-                    .OrderByDescending(m => m.Id);
+                    .OrderByDescending(m => m.Id)
+                    .ToList();
             }
 
             return messagesToReturn;
@@ -43,7 +45,8 @@ namespace RaspPi3.WebApi.Controllers
                 messagesToReturn = dbContext.MqttMessages
                     .Take(topCount)
                     .Where(m => m.Topic == topic)
-                    .OrderByDescending(m => m.Id);
+                    .OrderByDescending(m => m.Id)
+                    .ToList();
             }
 
             return messagesToReturn;
@@ -64,7 +67,8 @@ namespace RaspPi3.WebApi.Controllers
                 messagesToReturn = dbContext.MqttMessages
                     .Take(topCount)
                     .Where(m => m.Topic == topic && m.UserFrom == user)
-                    .OrderByDescending(m => m.Id);
+                    .OrderByDescending(m => m.Id)
+                    .ToList();
             }
 
             return messagesToReturn;
@@ -95,7 +99,7 @@ namespace RaspPi3.WebApi.Controllers
             using (var dbContext = new MqttDbContext())
             {
                 dbContext.MqttMessages.Add(mqttMessage);
-                dbContext.SaveChangesAsync();
+                dbContext.SaveChanges();
             }
         }
 
@@ -104,7 +108,6 @@ namespace RaspPi3.WebApi.Controllers
         /// Deletes the message with the given id.
         /// </summary>
         /// <param name="id">Id of message.</param>
-        [Authorize]
         public void Delete(int id)
         {
             SaveMqttMessageBindingModel messageToDelete = null;
@@ -120,13 +123,12 @@ namespace RaspPi3.WebApi.Controllers
         /// Deletes the given message.
         /// </summary>
         /// <param name="mqttMessage">Message Json object.</param>
-        [Authorize]
         public void Delete([FromBody]SaveMqttMessageBindingModel mqttMessage)
         {
             using (var dbContext = new MqttDbContext())
             {
                 dbContext.MqttMessages.Remove(mqttMessage);
-                dbContext.SaveChangesAsync();
+                dbContext.SaveChanges();
             }
         }
     }

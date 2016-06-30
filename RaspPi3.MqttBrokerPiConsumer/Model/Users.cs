@@ -14,14 +14,19 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         [DataMember]
         [PrimaryKey]
         public string Name { get; set; }
+
         [DataMember]
         public string ClientId { get; set; }
+
         public string Password { get; set; }
+
         [Indexed]
         public string BrokerName { get; set; }
+
         [DataMember]
         [Ignore]
         internal virtual MqttConnection Connection { get; set; }
+
         [Ignore]
         internal virtual List<MqttTopic> TopicsToSubscribe
         {
@@ -36,4 +41,22 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             }
         }
     }
+
+    [Type(typeof(WebApiUser))]
+    [Table(nameof(WebApiUser))]
+    public class WebApiUser : SQLiteSaveAbleObject
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
+        public string Email { get; set; }
+
+        public string BaseUrl { get; set; }
+
+        public string Password { get; set; }
+
+        [Indexed]
+        public string Name { get; set; }
+    }
 }
+

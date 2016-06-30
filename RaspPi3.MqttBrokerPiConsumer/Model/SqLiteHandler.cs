@@ -11,6 +11,8 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
     internal class SqLiteHandler : IDisposable
     {
+        // TODO: Add new SQClasses as List here. All you need to do. And then instanciate it.
+        internal ObservableCollection<WebApiUser> WebApiUsers { get; private set; }
         internal ObservableCollection<MqttUser> MqttUsers { get; private set; }
         internal ObservableCollection<MqttTopic> MqttTopics { get; private set; }
         internal ObservableCollection<MqttConnection> MqttConnections { get; private set; }
@@ -36,6 +38,8 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
         private void SetUpLists()
         {
+            // TODO: Instanciate the new list.
+            WebApiUsers = GetInstantiatedList(WebApiUsers);
             MqttUsers = GetInstantiatedList(MqttUsers);
             MqttConnections = GetInstantiatedList(MqttConnections);
             MqttTopics = GetInstantiatedList(MqttTopics);

@@ -36,7 +36,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
 
                 var passwordCredential = new PasswordCredential
                 {
-                    Password = connection.password
+                    Password = connection.Password
                 };
 
                 await wifiAdapter.ConnectAsync(network, connection.RecconectionKind, passwordCredential);
@@ -58,7 +58,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
             using (var db = new SqLiteHandler())
             {
                 connection = db.Select<WifiConnection>()
-                    .FirstOrDefault(w => w.Ssid == "ti8m-IoT");
+                    .FirstOrDefault(w => w.Ssid == "ti8m-IoT" && !w.Password.Contains("*"));
             }
         }
 

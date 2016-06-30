@@ -10,7 +10,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
         [PrimaryKey]
         public string Ssid { get; set; }
 
-        public string password { get; set; }
+        public string Password { get; set; }
 
         public WiFiReconnectionKind RecconectionKind { get; set; }
     }
