@@ -332,7 +332,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage.ModelDescriptions
             };
 
             GeneratedModels.Add(complexModelDescription.Name, complexModelDescription);
-            bool hasDataContractAttribute = modelType.GetCustomAttribute<DataContractAttribute>() != null;
+            var hasDataContractAttribute = modelType.GetCustomAttribute<DataContractAttribute>() != null;
             PropertyInfo[] properties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (PropertyInfo property in properties)
             {

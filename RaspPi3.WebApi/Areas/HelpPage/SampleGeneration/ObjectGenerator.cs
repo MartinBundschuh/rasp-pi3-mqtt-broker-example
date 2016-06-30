@@ -126,7 +126,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
                     genericTypeDefinition == typeof(IEnumerable<>) ||
                     genericTypeDefinition == typeof(ICollection<>))
                 {
-                    Type collectionType = typeof(List<>).MakeGenericType(genericArguments);
+                    var collectionType = typeof(List<>).MakeGenericType(genericArguments);
                     return GenerateCollection(collectionType, collectionSize, createdObjectReferences);
                 }
 
@@ -135,7 +135,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
                     return GenerateQueryable(type, collectionSize, createdObjectReferences);
                 }
 
-                Type closedCollectionType = typeof(ICollection<>).MakeGenericType(genericArguments[0]);
+                var closedCollectionType = typeof(ICollection<>).MakeGenericType(genericArguments[0]);
                 if (closedCollectionType.IsAssignableFrom(type))
                 {
                     return GenerateCollection(type, collectionSize, createdObjectReferences);
@@ -146,11 +146,11 @@ namespace RaspPi3.WebApi.Areas.HelpPage
             {
                 if (genericTypeDefinition == typeof(IDictionary<,>))
                 {
-                    Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(genericArguments);
+                    var dictionaryType = typeof(Dictionary<,>).MakeGenericType(genericArguments);
                     return GenerateDictionary(dictionaryType, collectionSize, createdObjectReferences);
                 }
 
-                Type closedDictionaryType = typeof(IDictionary<,>).MakeGenericType(genericArguments[0], genericArguments[1]);
+                var closedDictionaryType = typeof(IDictionary<,>).MakeGenericType(genericArguments[0], genericArguments[1]);
                 if (closedDictionaryType.IsAssignableFrom(type))
                 {
                     return GenerateDictionary(type, collectionSize, createdObjectReferences);
@@ -169,8 +169,8 @@ namespace RaspPi3.WebApi.Areas.HelpPage
         {
             Type[] genericArgs = type.GetGenericArguments();
             object[] parameterValues = new object[genericArgs.Length];
-            bool failedToCreateTuple = true;
-            ObjectGenerator objectGenerator = new ObjectGenerator();
+            var failedToCreateTuple = true;
+            var objectGenerator = new ObjectGenerator();
             for (int i = 0; i < genericArgs.Length; i++)
             {
                 parameterValues[i] = objectGenerator.GenerateObject(genericArgs[i], createdObjectReferences);
@@ -201,7 +201,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
             Type[] genericArgs = keyValuePairType.GetGenericArguments();
             Type typeK = genericArgs[0];
             Type typeV = genericArgs[1];
-            ObjectGenerator objectGenerator = new ObjectGenerator();
+            var objectGenerator = new ObjectGenerator();
             object keyObject = objectGenerator.GenerateObject(typeK, createdObjectReferences);
             object valueObject = objectGenerator.GenerateObject(typeV, createdObjectReferences);
             if (keyObject == null && valueObject == null)
@@ -216,9 +216,9 @@ namespace RaspPi3.WebApi.Areas.HelpPage
         private static object GenerateArray(Type arrayType, int size, Dictionary<Type, object> createdObjectReferences)
         {
             Type type = arrayType.GetElementType();
-            Array result = Array.CreateInstance(type, size);
-            bool areAllElementsNull = true;
-            ObjectGenerator objectGenerator = new ObjectGenerator();
+            var result = Array.CreateInstance(type, size);
+            var areAllElementsNull = true;
+            var objectGenerator = new ObjectGenerator();
             for (int i = 0; i < size; i++)
             {
                 object element = objectGenerator.GenerateObject(type, createdObjectReferences);
@@ -248,7 +248,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
             object result = Activator.CreateInstance(dictionaryType);
             MethodInfo addMethod = dictionaryType.GetMethod("Add") ?? dictionaryType.GetMethod("TryAdd");
             MethodInfo containsMethod = dictionaryType.GetMethod("Contains") ?? dictionaryType.GetMethod("ContainsKey");
-            ObjectGenerator objectGenerator = new ObjectGenerator();
+            var objectGenerator = new ObjectGenerator();
             for (int i = 0; i < size; i++)
             {
                 object newKey = objectGenerator.GenerateObject(typeK, createdObjectReferences);
@@ -258,7 +258,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
                     return null;
                 }
 
-                bool containsKey = (bool)containsMethod.Invoke(result, new object[] { newKey });
+                var containsKey = (bool)containsMethod.Invoke(result, new object[] { newKey });
                 if (!containsKey)
                 {
                     object newValue = objectGenerator.GenerateObject(typeV, createdObjectReferences);
@@ -285,7 +285,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
             object list;
             if (isGeneric)
             {
-                Type listType = typeof(List<>).MakeGenericType(queryableType.GetGenericArguments());
+                var listType = typeof(List<>).MakeGenericType(queryableType.GetGenericArguments());
                 list = GenerateCollection(listType, size, createdObjectReferences);
             }
             else
@@ -298,7 +298,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
             }
             if (isGeneric)
             {
-                Type argumentType = typeof(IEnumerable<>).MakeGenericType(queryableType.GetGenericArguments());
+                var argumentType = typeof(IEnumerable<>).MakeGenericType(queryableType.GetGenericArguments());
                 MethodInfo asQueryableMethod = typeof(Queryable).GetMethod("AsQueryable", new[] { argumentType });
                 return asQueryableMethod.Invoke(null, new[] { list });
             }
@@ -313,8 +313,8 @@ namespace RaspPi3.WebApi.Areas.HelpPage
                 typeof(object);
             object result = Activator.CreateInstance(collectionType);
             MethodInfo addMethod = collectionType.GetMethod("Add");
-            bool areAllElementsNull = true;
-            ObjectGenerator objectGenerator = new ObjectGenerator();
+            var areAllElementsNull = true;
+            var objectGenerator = new ObjectGenerator();
             for (int i = 0; i < size; i++)
             {
                 object element = objectGenerator.GenerateObject(type, createdObjectReferences);

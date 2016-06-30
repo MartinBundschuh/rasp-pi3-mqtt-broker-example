@@ -1,6 +1,7 @@
 ﻿{
   "dependencies": {
     "M2Mqtt": "4.3.0",
+    "Microsoft.AspNet.WebApi.Client": "5.2.3",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
     "Okra.MEF": "1.2.0",
     "SQLite.Net-PCL": "3.1.1"

@@ -1,22 +1,35 @@
 ﻿using RaspPi3.WebApi.Models;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Web.Http;
 
 namespace RaspPi3.WebApi.Controllers
 {
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "CC0091")]
     public class MqttMessageController : ApiController
     {
-        // GET api/mqttMessages
+        const int topCount = 100;
+
+        // GET api/mqttMessage
         /// <summary>
         /// Returns latest 100 saved messages.
         /// </summary>
         /// <returns>A list with up to 100 messages.</returns>
         public IEnumerable<SaveMqttMessageBindingModel> Get()
         {
-            return new SaveMqttMessageBindingModel [] { null, null };
+            IEnumerable<SaveMqttMessageBindingModel> messagesToReturn = null;
+            using (var dbContext = new MqttDbContext())
+            {
+                messagesToReturn = dbContext.MqttMessages
+                    .Take(topCount)
+                    .OrderByDescending(m => m.Id);
+            }
+
+            return messagesToReturn;
         }
 
-        // GET api/mqttMessages/Topic
+        // GET api/mqttMessage/Topic
         /// <summary>
         /// Return latest 100 saved messages for a specific topic.
         /// </summary>
@@ -24,10 +37,19 @@ namespace RaspPi3.WebApi.Controllers
         /// <returns>A list with up to 100 messages for a topic.</returns>
         public IEnumerable<SaveMqttMessageBindingModel> Get(string topic)
         {
-            return new SaveMqttMessageBindingModel[] { null, null };
+            IEnumerable<SaveMqttMessageBindingModel> messagesToReturn = null;
+            using (var dbContext = new MqttDbContext())
+            {
+                messagesToReturn = dbContext.MqttMessages
+                    .Take(topCount)
+                    .Where(m => m.Topic == topic)
+                    .OrderByDescending(m => m.Id);
+            }
+
+            return messagesToReturn;
         }
 
-        // GET api/mqttMessages/TopicUser
+        // GET api/mqttMessage/TopicUser
         /// <summary>
         /// Return latest 100 saved messages for a specific topic and user.
         /// </summary>
@@ -36,10 +58,19 @@ namespace RaspPi3.WebApi.Controllers
         /// <returns>A list with up to 100 messages for a topic and user.</returns>
         public IEnumerable<SaveMqttMessageBindingModel> Get(string topic, string user)
         {
-            return new SaveMqttMessageBindingModel[] { null, null };
+            IEnumerable<SaveMqttMessageBindingModel> messagesToReturn = null;
+            using (var dbContext = new MqttDbContext())
+            {
+                messagesToReturn = dbContext.MqttMessages
+                    .Take(topCount)
+                    .Where(m => m.Topic == topic && m.UserFrom == user)
+                    .OrderByDescending(m => m.Id);
+            }
+
+            return messagesToReturn;
         }
 
-        // GET api/mqttMessages/5
+        // GET api/mqttMessage/5
         /// <summary>
         /// Returns the saves message with the given id.
         /// </summary>
@@ -47,19 +78,28 @@ namespace RaspPi3.WebApi.Controllers
         /// <returns>A single message with the given id.</returns>
         public SaveMqttMessageBindingModel Get(int id)
         {
-            return null;
+            SaveMqttMessageBindingModel messageToReturn = null;
+            using (var dbContext = new MqttDbContext())
+                messageToReturn = dbContext.MqttMessages.FirstOrDefault(m => m.Id == id);
+
+            return messageToReturn;
         }
 
-        // POST api/mqttMessages
+        // POST api/mqttMessage
         /// <summary>
         /// Saves a new message. Id is autoincrement.
         /// </summary>
         /// <param name="mqttMessage">Message Json object.</param>
         public void Post([FromBody]SaveMqttMessageBindingModel mqttMessage)
         {
+            using (var dbContext = new MqttDbContext())
+            {
+                dbContext.MqttMessages.Add(mqttMessage);
+                dbContext.SaveChangesAsync();
+            }
         }
 
-        // DELETE api/mqttMessages/5
+        // DELETE api/mqttMessage/5
         /// <summary>
         /// Deletes the message with the given id.
         /// </summary>
@@ -67,9 +107,15 @@ namespace RaspPi3.WebApi.Controllers
         [Authorize]
         public void Delete(int id)
         {
+            SaveMqttMessageBindingModel messageToDelete = null;
+            using (var dbContext = new MqttDbContext())
+                messageToDelete = dbContext.MqttMessages.FirstOrDefault(m => m.Id == id);
+
+            if (messageToDelete != null)
+                Delete(messageToDelete);
         }
 
-        // DELETE api/mqttMessages/Message
+        // DELETE api/mqttMessage/Message
         /// <summary>
         /// Deletes the given message.
         /// </summary>
@@ -77,6 +123,11 @@ namespace RaspPi3.WebApi.Controllers
         [Authorize]
         public void Delete([FromBody]SaveMqttMessageBindingModel mqttMessage)
         {
+            using (var dbContext = new MqttDbContext())
+            {
+                dbContext.MqttMessages.Remove(mqttMessage);
+                dbContext.SaveChangesAsync();
+            }
         }
     }
 }

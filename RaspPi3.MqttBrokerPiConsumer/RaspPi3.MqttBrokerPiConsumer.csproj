@@ -100,6 +100,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Model\ApiHandler.cs" />
     <Compile Include="Model\Enums.cs" />
     <Compile Include="Model\InterfacesAbstractClassesTypes.cs" />
     <Compile Include="Model\JsonHandler.cs" />

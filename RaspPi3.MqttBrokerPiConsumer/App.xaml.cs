@@ -22,7 +22,7 @@ namespace RaspPi3.MqttBrokerPiConsumer
         {
             InitializeComponent();
             SetupSqLite(false);
-            WifiConnector.ConnectToWifiIfNeededAsync();
+            Task.Run(() => WifiConnector.ConnectToWifiIfNeededAsync());
         }
 
         private static void SetupSqLite(bool runInitialDataSave)

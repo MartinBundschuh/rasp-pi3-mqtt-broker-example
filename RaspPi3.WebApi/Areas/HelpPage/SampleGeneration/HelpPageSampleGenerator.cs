@@ -307,8 +307,10 @@ namespace RaspPi3.WebApi.Areas.HelpPage
                     content = new ObjectContent(type, value, formatter, mediaType);
                     formatter.WriteToStreamAsync(type, value, ms, content, null).Wait();
                     ms.Position = 0;
-                    var reader = new StreamReader(ms);
-                    string serializedSampleString = reader.ReadToEnd();
+                    var serializedSampleString = string.Empty;
+                    using (var reader = new StreamReader(ms))
+                        serializedSampleString = reader.ReadToEnd();
+
                     if (mediaType.MediaType.ToUpperInvariant().Contains("XML"))
                     {
                         serializedSampleString = TryFormatXml(serializedSampleString);

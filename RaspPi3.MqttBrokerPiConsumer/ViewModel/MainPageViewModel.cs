@@ -29,10 +29,11 @@ namespace RaspPi3.MqttBrokerPiConsumer.ViewModel
                 dispatchTimer.Tick += (s, e) =>
                 {
                     RefreshControls();
-                    var mqttMessage = new MqttMessage<MqttUser>
+                    var mqttMessage = new MqttMessage
                     {
                         SendFrom = mqttConnector.mqttUser,
-                        ObjectSendJson = JsonHandler.GetJsonStringFromObject(mqttConnector.mqttUser)
+                        ObjectSendJson = JsonHandler.GetJsonStringFromObject(mqttConnector.mqttUser),
+                        TimeStampSend = DateTime.Now
                     };
 
                     mqttConnector.Publish(mqttConnector.mqttUser.TopicsToSubscribe

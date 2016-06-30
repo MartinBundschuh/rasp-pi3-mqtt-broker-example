@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace RaspPi3.MqttBrokerPiConsumer.Model
 {
@@ -6,9 +7,21 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
     public class WebApiMessage
     {
         [DataMember]
+        public int Id { get; set; }
+
+        [DataMember]
+        public DateTime TimeStampSend { get; set; }
+
+        [DataMember]
         public string ObjectSendJson { get; set; }
 
         [DataMember]
-        public MqttTopic Topic { get; set; }
+        public string UserFrom { get; set; }
+
+        [DataMember]
+        public string Topic { get; set; }
+
+        [DataMember]
+        public string BrokerAndPort { get; set; }
     }
 }
