@@ -23,7 +23,7 @@ namespace RaspPi3.MqttBrokerPiConsumer.Model
                 apiUser = db.Select<WebApiUser>()
                     .FirstOrDefault(u => u.Name == mqttUser.Name && !u.Password.Contains("*"));
 
-                apiUser.BaseUrl = "https://rasppi3webapi20160622020016.azurewebsites.net/";
+                apiUser.BaseUrl = "https://rasppi3webapi.azurewebsites.net/";
                 Task.Run(() => db.SaveChangesAsync());
             //}
 

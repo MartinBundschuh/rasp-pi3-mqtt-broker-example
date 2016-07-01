@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Exchange.WebServices.Data;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using RaspPi3.WebApi.Models;
 using System;
-using System.Net;
-using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Configuration;
@@ -59,23 +58,28 @@ namespace RaspPi3.WebApi
 
     public class EmailService : IIdentityMessageService
     {
-        public async Task SendAsync(IdentityMessage message)
+        public async System.Threading.Tasks.Task SendAsync(IdentityMessage message)
         {
+            var userName = WebConfigurationManager.AppSettings["MailUser"];
+            var domain = WebConfigurationManager.AppSettings["MailDomain"];
+            var password = WebConfigurationManager.AppSettings["MailPass"];
+            var sentFrom = WebConfigurationManager.AppSettings["MailFrom"];
 
-            var userName = WebConfigurationManager.AppSettings["GmailUser"];
-            var password = WebConfigurationManager.AppSettings["GmailPass"];
-            var sentFrom = userName;
-            const int tslPort = 587; //ssl=465 not working.
-
-            using (var mail = new MailMessage(sentFrom, message.Destination, message.Subject, message.Body))
-            using (var client = new SmtpClient("smtp.gmail.com", tslPort))
+            var service = new ExchangeService(ExchangeVersion.Exchange2010_SP2)
             {
-                mail.IsBodyHtml = true;
-                client.Credentials = new NetworkCredential(userName, password);
-                client.EnableSsl = true;
+                Credentials = new WebCredentials(userName, password, domain)
+            };
+            service.AutodiscoverUrl(sentFrom);
 
-                await client.SendMailAsync(mail);
-            }
+            var email = new EmailMessage(service);
+            email.ToRecipients.Add(message.Destination);
+            email.Subject = message.Subject;
+            var body = new MessageBody(message.Body)
+            {
+                BodyType = BodyType.HTML
+            };
+            email.Body = body;
+            email.Send();
         }
     }
 
