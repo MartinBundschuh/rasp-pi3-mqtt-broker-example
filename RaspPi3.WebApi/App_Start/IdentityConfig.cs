@@ -9,6 +9,7 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Configuration;
+using Task = System.Threading.Tasks.Task;
 
 namespace RaspPi3.WebApi
 {
@@ -60,7 +61,7 @@ namespace RaspPi3.WebApi
 
     public class EmailService : IIdentityMessageService
     {
-        public async System.Threading.Tasks.Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
             var userName = WebConfigurationManager.AppSettings["MailUser"];
             var domain = WebConfigurationManager.AppSettings["MailDomain"];
@@ -78,10 +79,11 @@ namespace RaspPi3.WebApi
             email.Subject = message.Subject;
             var body = new MessageBody(message.Body)
             {
-                BodyType = BodyType.HTML
+                BodyType = BodyType.HTML,
             };
             email.Body = body;
             email.Send();
+            await Task.Yield();
         }
     }
 
