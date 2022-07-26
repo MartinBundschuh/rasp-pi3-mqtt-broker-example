@@ -37,7 +37,9 @@ namespace RaspPi3.WebApi
                     // This is a security feature which is used when you change a password or add an external login to your account.
                     OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
                         validateInterval: TimeSpan.FromMinutes(20),
-                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager, DefaultAuthenticationTypes.ApplicationCookie))
+                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(
+                            manager, 
+                            DefaultAuthenticationTypes.ApplicationCookie)),
                 }
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
@@ -51,7 +53,7 @@ namespace RaspPi3.WebApi
                 AuthorizeEndpointPath = new PathString("/Account/Authorize"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
                 // In production mode set AllowInsecureHttp = false
-                AllowInsecureHttp = false
+                AllowInsecureHttp = false,
             };
 
             // Enable the application to use bearer tokens to authenticate users

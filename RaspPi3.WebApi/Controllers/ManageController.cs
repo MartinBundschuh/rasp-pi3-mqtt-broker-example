@@ -29,26 +29,14 @@ namespace RaspPi3.WebApi.Controllers
 
         public ApplicationSignInManager SignInManager
         {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set
-            {
-                _signInManager = value;
-            }
+            get => _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            private set => _signInManager = value;
         }
 
         public ApplicationUserManager UserManager
         {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
+            get => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            private set => _userManager = value;
         }
 
         //
@@ -56,13 +44,16 @@ namespace RaspPi3.WebApi.Controllers
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-                : string.Empty;
+                message switch
+                {
+                    ManageMessageId.ChangePasswordSuccess => "Your password has been changed.",
+                    ManageMessageId.SetPasswordSuccess => "Your password has been set.",
+                    ManageMessageId.SetTwoFactorSuccess => "Your two-factor authentication provider has been set.",
+                    ManageMessageId.Error => "An error has occurred.",
+                    ManageMessageId.AddPhoneSuccess => "Your phone number was added.",
+                    ManageMessageId.RemovePhoneSuccess => "Your phone number was removed.",
+                    _ => string.Empty,
+                };
 
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
@@ -71,7 +62,7 @@ namespace RaspPi3.WebApi.Controllers
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
             };
             return View(model);
         }
@@ -83,7 +74,9 @@ namespace RaspPi3.WebApi.Controllers
         public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
         {
             ManageMessageId? message;
-            var result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
+            var result = await UserManager.RemoveLoginAsync(
+                User.Identity.GetUserId(), 
+                new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
@@ -119,15 +112,17 @@ namespace RaspPi3.WebApi.Controllers
             }
             // Generate the token and send it
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);
-            if (UserManager.SmsService != null)
+            if (UserManager.SmsService == null)
             {
-                var message = new IdentityMessage
-                {
-                    Destination = model.Number,
-                    Body = "Your security code is: " + code
-                };
-                await UserManager.SmsService.SendAsync(message);
+                return RedirectToAction(nameof(VerifyPhoneNumber), new {PhoneNumber = model.Number});
             }
+
+            var message = new IdentityMessage
+            {
+                Destination = model.Number,
+                Body = $"Your security code is: {code}",
+            };
+            await UserManager.SmsService.SendAsync(message);
             return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.Number });
         }
 
@@ -167,7 +162,9 @@ namespace RaspPi3.WebApi.Controllers
         {
             var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
             // Send an SMS through the SMS provider to verify the phone number
-            return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
+            return phoneNumber == null 
+                ? View("Error") 
+                : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
 
         //
@@ -247,10 +244,7 @@ namespace RaspPi3.WebApi.Controllers
 
         //
         // GET: /Manage/SetPassword
-        public ActionResult SetPassword()
-        {
-            return View();
-        }
+        public ActionResult SetPassword() => View();
 
         //
         // POST: /Manage/SetPassword
@@ -258,20 +252,18 @@ namespace RaspPi3.WebApi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+            if (result.Succeeded)
             {
-                var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
-                if (result.Succeeded)
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
                 {
-                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                    if (user != null)
-                    {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    }
-                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                AddErrors(result);
+                return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
             }
+            AddErrors(result);
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -282,9 +274,12 @@ namespace RaspPi3.WebApi.Controllers
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : string.Empty;
+                message switch
+                {
+                    ManageMessageId.RemoveLoginSuccess => "The external login was removed.",
+                    ManageMessageId.Error => "An error has occurred.",
+                    _ => string.Empty,
+                };
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             if (user == null)
             {
@@ -296,7 +291,7 @@ namespace RaspPi3.WebApi.Controllers
             return View(new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,
-                OtherLogins = otherLogins
+                OtherLogins = otherLogins,
             });
         }
 
@@ -304,11 +299,9 @@ namespace RaspPi3.WebApi.Controllers
         // POST: /Manage/LinkLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LinkLogin(string provider)
-        {
+        public ActionResult LinkLogin(string provider) =>
             // Request a redirect to the external login provider to link a login for the current user
-            return new ChallengeResult(provider, Url.Action(nameof(LinkLoginCallback), "Manage"), User.Identity.GetUserId());
-        }
+            new ChallengeResult(provider, Url.Action(nameof(LinkLoginCallback), "Manage"), User.Identity.GetUserId());
 
         //
         // GET: /Manage/LinkLoginCallback
@@ -336,13 +329,7 @@ namespace RaspPi3.WebApi.Controllers
 
         #region Helpers
 
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
         private void AddErrors(IdentityResult result)
         {
@@ -355,21 +342,13 @@ namespace RaspPi3.WebApi.Controllers
         private bool HasPassword()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
-            if (user != null)
-            {
-                return user.PasswordHash != null;
-            }
-            return false;
+            return user?.PasswordHash != null;
         }
 
         private bool HasPhoneNumber()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
-            if (user != null)
-            {
-                return user.PhoneNumber != null;
-            }
-            return false;
+            return user?.PhoneNumber != null;
         }
 
         public enum ManageMessageId
@@ -380,7 +359,7 @@ namespace RaspPi3.WebApi.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
-            Error
+            Error,
         }
 
         #endregion

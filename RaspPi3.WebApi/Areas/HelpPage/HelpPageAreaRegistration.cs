@@ -5,13 +5,7 @@ namespace RaspPi3.WebApi.Areas.HelpPage
 {
     public class HelpPageAreaRegistration : AreaRegistration
     {
-        public override string AreaName
-        {
-            get
-            {
-                return nameof(HelpPage);
-            }
-        }
+        public override string AreaName => nameof(HelpPage);
 
         public override void RegisterArea(AreaRegistrationContext context)
         {

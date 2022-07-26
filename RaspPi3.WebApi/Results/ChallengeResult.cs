@@ -25,10 +25,10 @@ namespace RaspPi3.WebApi.Results
             RedirectUri = redirectUri;
             UserId = userId;
         }
-        public string RedirectUri { get; set; }
-        public string UserId { get; set; }
-        public string LoginProvider { get; set; }
-        public HttpRequestMessage Request { get; set; }
+        public string RedirectUri { get; }
+        public string UserId { get; }
+        public string LoginProvider { get; }
+        public HttpRequestMessage Request { get; }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {

@@ -19,10 +19,11 @@ namespace RaspPi3.WebApi
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
             : base(store)
         {
-
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
+        public static ApplicationUserManager Create(
+            IdentityFactoryOptions<ApplicationUserManager> options,
+            IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
             // Configure validation logic for usernames
@@ -38,7 +39,7 @@ namespace RaspPi3.WebApi
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
-                RequireUppercase = true
+                RequireUppercase = true,
             };
 
             manager.MaxFailedAccessAttemptsBeforeLockout = 3;
@@ -50,7 +51,8 @@ namespace RaspPi3.WebApi
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(
+                    dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
         }
@@ -86,8 +88,8 @@ namespace RaspPi3.WebApi
     // Configure the application sign-in manager which is used in this application.
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {
-        public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager) :
-            base(userManager, authenticationManager)
+        public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager) 
+            : base(userManager, authenticationManager)
         { }
 
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)

@@ -29,26 +29,14 @@ namespace RaspPi3.WebApi.Controllers
 
         public ApplicationSignInManager SignInManager
         {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set
-            {
-                _signInManager = value;
-            }
+            get => _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            private set => _signInManager = value;
         }
 
         public ApplicationUserManager UserManager
         {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
+            get => _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            private set => _userManager = value;
         }
 
         // The Authorize Action is the end point which gets called when you access any
@@ -108,10 +96,7 @@ namespace RaspPi3.WebApi.Controllers
         //
         // GET: /Account/EmailNotConfirmed
         [AllowAnonymous]
-        public ActionResult EmailNotConfirmed()
-        {
-            return View(nameof(EmailNotConfirmed));
-        }
+        public ActionResult EmailNotConfirmed() => View(nameof(EmailNotConfirmed));
 
         //
         // GET: /Account/VerifyCode
@@ -159,10 +144,7 @@ namespace RaspPi3.WebApi.Controllers
         //
         // GET: /Account/Register
         [AllowAnonymous]
-        public ActionResult Register()
-        {
-            return View();
-        }
+        public ActionResult Register() => View();
 
         //
         // POST: /Account/Register
@@ -171,24 +153,22 @@ namespace RaspPi3.WebApi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var result = await UserManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                // Send an email with this link
+                var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction(nameof(ConfirmMailSend), "Account");
-                }
-                AddErrors(result);
+                return RedirectToAction(nameof(ConfirmMailSend), "Account");
             }
+            AddErrors(result);
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -197,10 +177,7 @@ namespace RaspPi3.WebApi.Controllers
         //
         // GET: /Account/ConfirmMailSend
         [AllowAnonymous]
-        public ActionResult ConfirmMailSend()
-        {
-            return View(nameof(ConfirmMailSend));
-        }
+        public ActionResult ConfirmMailSend() => View(nameof(ConfirmMailSend));
 
         //
         // GET: /Account/ConfirmEmail
@@ -218,10 +195,7 @@ namespace RaspPi3.WebApi.Controllers
         //
         // GET: /Account/ForgotPassword
         [AllowAnonymous]
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
+        public ActionResult ForgotPassword() => View();
 
         //
         // POST: /Account/ForgotPassword
@@ -230,42 +204,35 @@ namespace RaspPi3.WebApi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            var user = await UserManager.FindByNameAsync(model.Email);
+            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View(nameof(ForgotPasswordConfirmation));
-                }
-
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                return RedirectToAction(nameof(ForgotPasswordConfirmation), "Account");
+                // Don't reveal that the user does not exist or is not confirmed
+                return View(nameof(ForgotPasswordConfirmation));
             }
 
+            // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+            // Send an email with this link
+            var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
+            await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            return RedirectToAction(nameof(ForgotPasswordConfirmation), "Account");
+
             // If we got this far, something failed, redisplay form
-            return View(model);
         }
 
         //
         // GET: /Account/ForgotPasswordConfirmation
         [AllowAnonymous]
-        public ActionResult ForgotPasswordConfirmation()
-        {
-            return View();
-        }
+        public ActionResult ForgotPasswordConfirmation() => View();
 
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
-        {
-            return code == null ? View("Error") : View();
-        }
+        public ActionResult ResetPassword(string code) => code == null
+            ? View("Error") 
+            : View();
 
         //
         // POST: /Account/ResetPassword
@@ -296,21 +263,18 @@ namespace RaspPi3.WebApi.Controllers
         //
         // GET: /Account/ResetPasswordConfirmation
         [AllowAnonymous]
-        public ActionResult ResetPasswordConfirmation()
-        {
-            return View();
-        }
+        public ActionResult ResetPasswordConfirmation() => View();
 
         //
         // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult ExternalLogin(string provider, string returnUrl)
-        {
+        public ActionResult ExternalLogin(string provider, string returnUrl) =>
             // Request a redirect to the external login provider
-            return new ChallengeResult(provider, Url.Action(nameof(ExternalLoginCallback), "Account", new { ReturnUrl = returnUrl }));
-        }
+            new ChallengeResult(
+                provider, 
+                Url.Action(nameof(ExternalLoginCallback), "Account", new { ReturnUrl = returnUrl }));
 
         //
         // GET: /Account/SendCode
@@ -457,13 +421,7 @@ namespace RaspPi3.WebApi.Controllers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
         private void AddErrors(IdentityResult result)
         {
@@ -496,9 +454,9 @@ namespace RaspPi3.WebApi.Controllers
                 UserId = userId;
             }
 
-            public string LoginProvider { get; set; }
-            public string RedirectUri { get; set; }
-            public string UserId { get; set; }
+            public string LoginProvider { get; }
+            public string RedirectUri { get; }
+            public string UserId { get; }
 
             public override void ExecuteResult(ControllerContext context)
             {
